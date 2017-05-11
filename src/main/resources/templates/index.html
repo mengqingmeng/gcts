@@ -3,8 +3,77 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}" />
+    <script th:src="@{/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+    <style>
+        red{color:red;}
+        #result-con{margin-top: 10px;}
+        .hidden{display: none;}
+    </style>
 </head>
 <body>
-<p th:text="'Hello, '!'" />
+    <div style="width: 60%;margin: 20px auto;">
+        <label for="begin"><red>*</red>开始页码</label>
+        <input type="number" class="form-control" id="begin" placeholder="输入开始页码"/>
+
+        <label for="end"><red>*</red>结束页码</label>
+        <input type="number" class="form-control" id="end" placeholder="输入结束页码"/>
+        <br />
+        <label for="kuSelect"><red>*</red>妆品库选择</label>
+        <div id="kuSelect">
+            <div class="radio">
+                <label for="gcft">
+                    <input type="radio" value="gcft" name="ku" id="gcft"/>
+                    国产非特殊用途化妆品库
+                </label>
+            </div>
+            <div class="radio">
+                <label for="jk">
+                    <input type="radio" value="jk" name="ku" id="jk"/>
+                    进口化妆品库
+                </label>
+            </div>
+        </div>
+        <br />
+        <button type="button" class="btn btn-info" id="start">开始</button>
+        <div id="result-con" class="hidden">
+            <span>开始爬取：第</span><span id="status"></span><span>页</span>
+        </div>
+    </div>
+<script>
+    $(function () {
+        $('#start').click(function () {
+            var fromPage = $('#begin').val();
+            var endPage = $('#end').val();
+            var select = $("input[name='ku']:checked");
+
+            if(fromPage == 0 || endPage == 0 || select == undefined || select.length==0){
+                alert('*标为必填')
+                return
+            }
+
+            if (fromPage>endPage){
+                alert("起止页有误");
+                return;
+            }
+
+            $.ajax({url:"/start",
+                async:false,
+                data:{fromPage:fromPage,endPage:endPage,ku:select.val()},
+                beforeSend:function () {
+                    $('#start').attr('disabled',"true");
+                },
+                success:function (d) {
+                    if(d='succ')
+                        $('#result-con').show();
+                }});
+        });
+    })
+
+    function emptySapce(val){
+        return val.replace(/(^\s*)|(\s*$)/g, '');
+    }
+</script>
 </body>
 </html>
