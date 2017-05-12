@@ -45,15 +45,19 @@ public class ReadAndWritePoiUtil {
             }
     }
 
-    public boolean writeProuctInfo(Object o,int startLine){
-        Field[] fields =  o.getClass().getDeclaredFields();
-        StringBuffer sb = null;
-        String name = null;
-        Object val = null;
+    public boolean writeProuctInfo(Object o){
         try {
+            Field[] fields =  o.getClass().getDeclaredFields();
+            if(getRowCount()<=0){
+                writeTitleName(o);
+            }
+            int startLine = getRowCount()+1;
+            StringBuffer sb = null;
+            String name = null;
+            Object val = null;
             wb = getWorkbookType();
             Sheet sheet =  wb.getSheetAt(0);
-            Row row =  sheet.createRow(startLine+1);
+            Row row =  sheet.createRow(startLine);
             Cell cell = null;
             Cell cell1 = null;
             for(int i = 0 ;i <fields.length; i ++){

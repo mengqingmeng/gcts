@@ -133,7 +133,7 @@ public class AmazonUrlSprider {
                 ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/Data/Amazon/Url.xlsx");
 
                 for(AmazonProductUrl u:urls) {
-                    pu.writeProuctInfo(u, i++);
+                   // pu.writeProuctInfo(u, i++);
                 }
                 System.out.println(m);
             }
