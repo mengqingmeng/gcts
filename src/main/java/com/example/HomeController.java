@@ -16,7 +16,7 @@ public class HomeController {
     private final static Logger logger = LoggerFactory.getLogger(HomeController.class);
     @Autowired
     Scrapy scrapy;
-
+    
     @RequestMapping("/")
     public String home(){
         return "index";
