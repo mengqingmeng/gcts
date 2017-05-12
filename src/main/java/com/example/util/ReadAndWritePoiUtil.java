@@ -83,9 +83,15 @@ public class ReadAndWritePoiUtil {
                 System.out.println("非法的文件");
             }
         }else {
+            if(file.getPath().endsWith(".xls")){
+                wb = new HSSFWorkbook();
+            }else {
+                wb = new XSSFWorkbook();
+            }
             FileOutputStream fos = new FileOutputStream(file);
-            wb = new XSSFWorkbook();
+
             wb.createSheet("sheet1");
+
             wb.write(fos);
         }
         return wb;
