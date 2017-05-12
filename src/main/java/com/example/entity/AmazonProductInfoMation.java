@@ -33,4 +33,10 @@ public class AmazonProductInfoMation {
     public void setAmazonProducts(List<AmazonProduct> amazonProducts) {
         this.amazonProducts = amazonProducts;
     }
+
+    @Override
+    public String toString() {
+        return name ;
+
+    }
 }

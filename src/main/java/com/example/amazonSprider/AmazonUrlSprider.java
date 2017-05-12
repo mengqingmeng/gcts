@@ -1,7 +1,8 @@
 package com.example.amazonSprider;
 
-import com.example.entity.AmazonProduct;
+import com.example.entity.AmazonProductUrl;
 import com.example.util.AmazonSpiderUtil;
+import com.example.util.ReadAndWritePoiUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,21 +10,19 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by 陈成 on 2017/5/12.
  */
 @Component
 public class AmazonUrlSprider {
-    @Autowired
-    private AmazonSpiderUtil su ;
-    private static String  amazon = "https://www.amazon.com";
+
+    private AmazonSpiderUtil su =new AmazonSpiderUtil();
+    private static final String  amazon = "https://www.amazon.com";
 
 
-    public Map<String,String> getUrls(String url) throws Exception{
+    private Map<String,String> getUrls(String url) throws Exception{
 
         Map<String ,String> urls = new HashMap<String, String>();
         Document doc = su.getDocument(url);
@@ -42,7 +41,7 @@ public class AmazonUrlSprider {
         return urls;
     }
 
-    public int getPageCount(Document doc){
+    private int getPageCount(Document doc){
         Iterator<Element> i = doc.getElementById("search-results").getElementsByClass("pagnDisabled").iterator();
 
         if(i.hasNext()){
@@ -52,7 +51,7 @@ public class AmazonUrlSprider {
         return 0 ;
     }
 
-    public Document getNextPage(Document doc){
+    private Document getNextPage(Document doc){
 
         String nextUrl = doc.getElementById("pagnNextLink").attr("href");
         String str = amazon+nextUrl;
@@ -66,46 +65,88 @@ public class AmazonUrlSprider {
         }
     }
 
-    public void saveProductUrl(Document doc){
+    private List<AmazonProductUrl> saveProductUrl(Document doc){
         Element e = null;
         Elements es = null ;
         Iterator<Element> i ;
-        AmazonProduct product = null;
+        AmazonProductUrl product = null;
+        List<AmazonProductUrl> urls = new ArrayList<>();
         String s = "";
         es = doc.getElementById("search-results").getElementsByClass("s-access-detail-page");
         i = es.iterator();
         while(i.hasNext()){
             e = i.next();
-            product = new AmazonProduct();
+            product = new AmazonProductUrl();
             s = e.attr("href");
             if(!s.contains(amazon)){
                 s = amazon + s;
             }
             product.setUrl(s);
-          //  productDao.saveProductUrl(product);
+            urls.add(product);
         }
+        return urls;
     }
-    public void saveProductUrl(Document doc,int m ){
+    private List<AmazonProductUrl> saveProductUrl(Document doc,int m ){
 
         Element e = null;
         Elements es = null ;
         Iterator<Element> i ;
-        AmazonProduct product = null;
+        AmazonProductUrl product = null;
         String s = "";
+        List<AmazonProductUrl> urls = new ArrayList<>();
         es = doc.getElementById("s-results-list-atf").getElementsByClass("s-access-detail-page");
         i = es.iterator();
         while(i.hasNext()){
             e = i.next();
-            product = new AmazonProduct();
+            product = new AmazonProductUrl();
             s = e.attr("href");
             if(!s.contains(amazon)){
                 s = amazon + s;
             }
             product.setUrl(s);
-           // productDao.saveProductUrl(product);
+            urls.add(product);
+        }
+        return urls;
+    }
+
+    public void startAmazonUrlSprider(String url,String clazz){
+        Document doc = null;
+        Document temp = null;
+        int pageCount;
+        List<AmazonProductUrl> urls = new ArrayList<>();
+        try {
+            doc = su.getDocument(getUrls(url).get(clazz));
+            pageCount =getPageCount(doc);
+            urls.addAll(saveProductUrl(doc));
+            int i = 0 ;
+            for(int m = 1 ; m  < pageCount ; m++) {
+
+                //doc = Jsoup.parse(sm.getNextPage(doc));
+                urls.clear();
+                temp = getNextPage(doc);
+                if (temp != null) {
+                    doc = temp;
+                } else {
+                    m--;
+                }
+                urls.addAll(saveProductUrl(doc, m));
+                ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/Data/Amazon/Url.xlsx");
+
+                for(AmazonProductUrl u:urls) {
+                    pu.writeProuctInfo(u, i++);
+                }
+                System.out.println(m);
+            }
+
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
         }
 
     }
+    }
+
+
   /*  public static void main(String[] args) throws Exception {
 
 *//*	String str = 	"https://www.amazon.com/s/ref=lp_11060711_pg_2/144-9495038-4173818?rh=n%3A3760911%2Cn%3A%2111055981%2Cn%3A11060451%2Cn%3A11060711&page=2&ie=UTF8&qid=1494410268&spIA=B00Z75ZDAU,B00QUKS6NW,B00G2TQNZ4";
@@ -151,4 +192,4 @@ public class AmazonUrlSprider {
 
     }
 */
-}
+

@@ -16,11 +16,10 @@ public class AmazonProduct {
     private String details;
     private String aboutThisProduct;
     private String description;
-    private String url;
     private String saleWell;
     private String size;
-    private List<AmazonProductInfoMation> amazonProductInfoMations;
-
+   // private List<AmazonProductInfoMation> amazonProductInfoMations;
+    private String amazonProductInfoMations;
 
     public int getId() {
         return id;
@@ -94,14 +93,6 @@ public class AmazonProduct {
         this.description = description;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getSaleWell() {
         return saleWell;
     }
@@ -118,11 +109,19 @@ public class AmazonProduct {
         this.size = size;
     }
 
-    public List<AmazonProductInfoMation> getAmazonProductInfoMations() {
+  /*  public List<AmazonProductInfoMation> getAmazonProductInfoMations() {
         return amazonProductInfoMations;
     }
 
     public void setAmazonProductInfoMations(List<AmazonProductInfoMation> amazonProductInfoMations) {
+        this.amazonProductInfoMations = amazonProductInfoMations;
+    }*/
+
+    public String getAmazonProductInfoMations() {
+        return amazonProductInfoMations;
+    }
+
+    public void setAmazonProductInfoMations(String amazonProductInfoMations) {
         this.amazonProductInfoMations = amazonProductInfoMations;
     }
 }

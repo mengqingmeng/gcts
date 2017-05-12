@@ -38,7 +38,6 @@ public class AmazonSpiderUtil {
 
     public Document getDocument (String url ) throws Exception{
         return Jsoup.connect(url).timeout(60000)
-
                 .get();
 
     }

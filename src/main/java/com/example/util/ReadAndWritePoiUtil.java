@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Created by 陈成 on 2017/5/12.
@@ -46,15 +47,36 @@ public class ReadAndWritePoiUtil {
 
     public boolean writeProuctInfo(Object o,int startLine){
         Field[] fields =  o.getClass().getDeclaredFields();
+        StringBuffer sb = null;
+        String name = null;
+        Object val = null;
         try {
             wb = getWorkbookType();
             Sheet sheet =  wb.getSheetAt(0);
             Row row =  sheet.createRow(startLine+1);
             Cell cell = null;
+            Cell cell1 = null;
             for(int i = 0 ;i <fields.length; i ++){
                 cell = row.createCell(i);
-                String name  = fields[i].getName();
-                cell.setCellValue( o.getClass().getMethod(name).invoke(o).toString());
+                name =   fields[i].getName();
+                sb  = new StringBuffer();
+                sb.append("get").append(name.substring(0,1).toUpperCase()).append(name.substring(1,name.length()));
+                Method method = o.getClass().getMethod(sb.toString());
+                val = method.invoke(o);
+               if(val != null){
+                   String str = val.toString();
+                  if("amazonProductInfoMations".equals(name)){
+                      String[] strs = str.split(":");
+                      for(int j = 1 ;j<strs.length;j++){
+                         cell1 = row.createCell(i+j);
+                         cell1.setCellValue(strs[j]);
+                      }
+                      str = strs[0];
+                  }
+                cell.setCellValue(str);
+            }else {
+                   cell.setCellValue("");
+               }
             }
             wb.write(new FileOutputStream(file));
             return true;
