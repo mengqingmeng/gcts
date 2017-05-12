@@ -3,6 +3,11 @@ package com.example.scrapy;
 import com.example.result.Result;
 import com.example.util.HttpClientUtil;
 import com.example.util.UnirestUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -15,6 +20,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by mqm on 2017/5/11.
@@ -23,6 +31,8 @@ import javax.servlet.http.HttpSession;
 public class GcftScrapy {
 
     private final static Logger logger = LoggerFactory.getLogger(GcftScrapy.class);
+
+    int gcftLine = 0;
 
     public void Scrapy(Integer fromPage,Integer toPage,String ku) throws Exception {
         RequestAttributes ra = RequestContextHolder.getRequestAttributes();
@@ -64,7 +74,7 @@ public class GcftScrapy {
         }
     }
 
-    public void dealGcftDetail(JSONObject detail){
+    public void dealGcftDetail(JSONObject detail) throws IOException {
         JSONArray sjscqyList = detail.getJSONArray("sjscqyList");//实际生产企业
         JSONObject scqyUnitinfo = detail.getJSONObject("scqyUnitinfo");//生产企业单元信息
         JSONArray pfList = detail.getJSONArray("pfList");//成分列表
@@ -92,7 +102,13 @@ public class GcftScrapy {
             sjscqys.put(scqyInfo);
         }
 
+        Workbook wb = new XSSFWorkbook();
+        Sheet sheet1 = wb.createSheet("gcft");
+        FileOutputStream fileOut = new FileOutputStream("gcft.xlsx");
 
+
+        wb.write(fileOut);
+        fileOut.close();
     }
 
 }
