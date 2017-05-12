@@ -2,15 +2,15 @@ package com.example.entity;
 
 public class BeautyProduct {
 
-	private String name;                //��Ʒ���
-	private float price;               //��Ʒ�۸�
-	private Integer CommunityRating;   //��������
-	private Integer ExpertRating;      //ר������
-	private String EXPERTREVIEWS;      //ר������
-	private String COMMUNITYREVIEWS;   //�������
-	private String CLAIMS;            //Ҫ��
-	private String INGREDIENTS;       //ԭ��
-	private String BRANDOVERVIEW;     //Ʒ�Ƹſ�
+	private String name;                //产品名称
+	private float price;               //产品价格
+	private Integer CommunityRating;   //社区评分
+	private Integer ExpertRating;      //专家评分
+	private String EXPERTREVIEWS;      //专家评语
+	private String COMMUNITYREVIEWS;   //社会评论
+	private String CLAIMS;            //要求
+	private String INGREDIENTS;       //原料
+	private String BRANDOVERVIEW;     //品牌概况
 	public String getName() {
 		return name;
 	}
