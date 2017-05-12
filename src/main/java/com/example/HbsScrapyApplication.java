@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GctsApplication {
+public class HbsScrapyApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GctsApplication.class, args);
+		SpringApplication.run(HbsScrapyApplication.class, args);
 	}
 
 
