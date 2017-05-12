@@ -70,7 +70,7 @@ public class AmazonUrlSprider {
         Elements es = null ;
         Iterator<Element> i ;
         AmazonProductUrl product = null;
-        List<AmazonProductUrl> urls = new ArrayList<>();
+        List<AmazonProductUrl> urls = new ArrayList<AmazonProductUrl>();
         String s = "";
         es = doc.getElementById("search-results").getElementsByClass("s-access-detail-page");
         i = es.iterator();
@@ -93,7 +93,7 @@ public class AmazonUrlSprider {
         Iterator<Element> i ;
         AmazonProductUrl product = null;
         String s = "";
-        List<AmazonProductUrl> urls = new ArrayList<>();
+        List<AmazonProductUrl> urls = new ArrayList<AmazonProductUrl>();
         es = doc.getElementById("s-results-list-atf").getElementsByClass("s-access-detail-page");
         i = es.iterator();
         while(i.hasNext()){
@@ -113,7 +113,7 @@ public class AmazonUrlSprider {
         Document doc = null;
         Document temp = null;
         int pageCount;
-        List<AmazonProductUrl> urls = new ArrayList<>();
+        List<AmazonProductUrl> urls = new ArrayList<AmazonProductUrl>();
         try {
             doc = su.getDocument(getUrls(url).get(clazz));
             pageCount =getPageCount(doc);
