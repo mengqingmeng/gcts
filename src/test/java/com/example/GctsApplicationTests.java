@@ -14,10 +14,5 @@ public class GctsApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-	@Test
-	public void testRWU(){
-		ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/test.xls");
-		AmazonProduct p = new AmazonProduct();
-		pu.writeTitleName(p);
-	}
 }
+

@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.*;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import java.net.URL;
 /**
  * Created by 陈成 on 2017/5/12.
  */
+@Component
 public class AmazonSpiderUtil {
 
     public String getXmlByHtmlunit(String url) throws Exception {
