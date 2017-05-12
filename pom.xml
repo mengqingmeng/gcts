@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>gcts</name>
-	<description>国产特殊库爬虫</description>
+	<description>红宝石数据爬取</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
