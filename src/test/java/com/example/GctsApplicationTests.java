@@ -27,9 +27,14 @@ public class GctsApplicationTests {
 		p.setAboutThisProduct("123123");
 		p.setCountAnswers("122");
 		p.setId(123);
-		p.setAmazonProductInfoMations("w<:>s<:>SDa<:>fas");
+		List<String> strings = new ArrayList<>();
+		for(int i= 0 ;i<5;i++){
+			strings.add("aaa"+i);
+
+		}
+		p.setInfoMations(strings);
 		List<AmazonProduct> productList = new ArrayList<>();
-		for(int i  = 0;i<100000;i++) {	p.setId(123+i);
+		for(int i  = 0;i<100;i++) {	p.setId(123+i);
 		 productList.add(p);
 		}
 		pu.writeProuctInfo(productList);

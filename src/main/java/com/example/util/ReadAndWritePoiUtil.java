@@ -108,28 +108,39 @@ public final class ReadAndWritePoiUtil {
         for (Object o : objs) {
            row =  sheet.createRow(lineNum++);
             fields = o.getClass().getDeclaredFields();
+
             for (int i = 0; i < fields.length; i++) {
                 cell = row.createCell(i);
                 name = fields[i].getName();
                 sb = new StringBuffer();
                 sb.append("get").append(name.substring(0, 1).toUpperCase()).append(name.substring(1, name.length()));
                 Method method = o.getClass().getMethod(sb.toString());
+               if(i+1 != fields.length){
                 val = method.invoke(o);
                 if (val != null) {
                     String str = val.toString();
-                    if ("infoMations".equals(name)) {
+                 /*   if ("infoMations".equals(name)) {
                         String[] strs = str.split("<:>");
                         for (int j = 1; j < strs.length; j++) {
                             cell1 = row.createCell(i + j);
                             cell1.setCellValue(strs[j]);
                         }
                         str = strs[0];
-                    }
+                    }*/
                     cell.setCellValue(str);
                 } else {
                     cell.setCellValue("");
                 }
+            }else{
+                   List<String> infos = (List<String>) method.invoke(o);
+                   for(int j = 0 ; j< infos.size(); j++){
+                       cell = row .createCell(i+j);
+                       cell.setCellValue(infos.get(j));
+                   }
+               }
+
             }
+
         }
         wb.write(fos);
     }

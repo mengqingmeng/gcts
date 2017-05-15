@@ -174,12 +174,11 @@ public class AmazonProductSprider {
     }
 
 
-    private String getInformation(AmazonProduct p){
+    private List<String> getInformation(AmazonProduct p){
       //  List<AmazonProductInfoMation> infos =  null;
       //  AmazonProductInfoMation info = null;
-
-        String string = null;
-        StringBuffer infoStr = new StringBuffer();
+        String string  = null ;
+        List<String> strings = null;
         Element e = doc.getElementById("importantInformation");
         if(e != null){
           //  infos = new ArrayList<AmazonProductInfoMation>();
@@ -191,13 +190,13 @@ public class AmazonProductSprider {
                 for(String s1 : strarr1){
                  //  info = new AmazonProductInfoMation();
                  //   info .setName(s1);
-                    infoStr.append(s1).append("<:>");
+                  strings.add(string);
                   //  infos.add(info);
                 }
             }
 
         }
-        return infoStr.toString();
+        return strings;
 
     }
 
@@ -283,7 +282,7 @@ public class AmazonProductSprider {
                     p.setCountReviews(this.getCountReviews());
                     p.setDescription(this.getDescription());
                     p.setDetails(this.getDetalis());
-                    p.setAmazonProductInfoMations(this.getInformation(p));
+                    p.setInfoMations(this.getInformation(p));
                     p.setPrice(this.getPrice());
                     p.setSaleWell(this.getSaleWell());
                     p.setSize(this.getSize());
