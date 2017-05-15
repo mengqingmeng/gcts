@@ -1,5 +1,7 @@
 package com.example.entity;
 
+import java.util.List;
+
 public class BeautyProduct {
 
 	private String name;                //产品名称
@@ -9,8 +11,8 @@ public class BeautyProduct {
 	private String EXPERTREVIEWS;      //专家评语
 	private String COMMUNITYREVIEWS;   //社会评论
 	private String CLAIMS;            //要求
-	private String INGREDIENTS;       //原料
 	private String BRANDOVERVIEW;     //品牌概况
+	private List<String> INGREDIENTS;   //成分
 	public String getName() {
 		return name;
 	}
@@ -41,12 +43,6 @@ public class BeautyProduct {
 	public void setCLAIMS(String cLAIMS) {
 		CLAIMS = cLAIMS;
 	}
-	public String getINGREDIENTS() {
-		return INGREDIENTS;
-	}
-	public void setINGREDIENTS(String iNGREDIENTS) {
-		INGREDIENTS = iNGREDIENTS;
-	}
 	public String getBRANDOVERVIEW() {
 		return BRANDOVERVIEW;
 	}
@@ -68,10 +64,16 @@ public class BeautyProduct {
 	public void setExpertRating(Integer expertRating) {
 		ExpertRating = expertRating;
 	}
+	public List<String> getINGREDIENTS() {
+		return INGREDIENTS;
+	}
+	public void setINGREDIENTS(List<String> iNGREDIENTS) {
+		INGREDIENTS = iNGREDIENTS;
+	}
 	public BeautyProduct(String name, float price, Integer communityRating,
 			Integer expertRating, String eXPERTREVIEWS,
-			String cOMMUNITYREVIEWS, String cLAIMS, String iNGREDIENTS,
-			String bRANDOVERVIEW) {
+			String cOMMUNITYREVIEWS, String cLAIMS, String bRANDOVERVIEW,
+			List<String> iNGREDIENTS) {
 		super();
 		this.name = name;
 		this.price = price;
@@ -80,7 +82,8 @@ public class BeautyProduct {
 		EXPERTREVIEWS = eXPERTREVIEWS;
 		COMMUNITYREVIEWS = cOMMUNITYREVIEWS;
 		CLAIMS = cLAIMS;
-		INGREDIENTS = iNGREDIENTS;
 		BRANDOVERVIEW = bRANDOVERVIEW;
-	}	
+		INGREDIENTS = iNGREDIENTS;
+	}
+	
 }

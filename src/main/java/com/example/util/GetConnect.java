@@ -6,14 +6,14 @@
 //
 //public class GetConnect {
 //    public static Connection getConn() {
-//    	
+//
 //        String driver = "com.mysql.jdbc.Driver";
 //        String url = "jdbc:mysql://localhost:3306/BeautyProduct";
 //        String username = "devep";
 //        String password = "development@hufu";
 //        Connection conn = null;
 //        try {
-//            Class.forName(driver); 
+//            Class.forName(driver);
 //            conn = (Connection) DriverManager.getConnection(url, username, password);
 //        } catch (ClassNotFoundException e) {
 //            e.printStackTrace();
@@ -23,7 +23,7 @@
 //        return conn;
 //
 //    }
-//    
+//
 //    public static int insertProduct(BeautyProduct beautyProduct) {
 //    	System.out.println("正在保存"+beautyProduct.getName()+"信息.....");
 //        Connection conn = getConn();
@@ -89,7 +89,7 @@
 //				ps.setInt(1, CategoryId);
 //		        ResultSet rs = ps.executeQuery();
 //		        while (rs.next()) {
-//		            url = rs.getString("url");    
+//		            url = rs.getString("url");
 //		           }
 //            ps.close();
 //            conn.close();

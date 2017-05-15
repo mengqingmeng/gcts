@@ -70,7 +70,13 @@ public class HomeController {
         model.put("categoryListS", categoryListS);
         return "BeautyPedia";
     }
-
+    @ResponseBody
+    @RequestMapping("/getinfo")
+    public String Getinfo(@RequestParam("proId") Integer proId){
+		System.out.println(proId);
+		PediaService.main(proId);
+    	return "结束";
+	}
     @ResponseBody
     @RequestMapping("/startGcft")
     public String startGcft(@RequestParam("fromPage") Integer fromePage,

@@ -6,21 +6,46 @@
     <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}" />
     <script th:src="@{/jquery-3.2.1.min.js}"></script>
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
-    <style>
-
+    <style >
+        #SKINCARE{display: none;}
+        .proId{display: none}
     </style>
 </head>
 <body>
-<table>
-<tr th:each="category : ${categoryListS}">
-　　<td th:text="${category.CategoryName}"></td>
-</tr>
+<button type="button" class="btn btn-primary">SKINCARE(护肤品)</button>
+<button type="button" class="btn btn-success">MAKEUP(化妆品)</button>
+<button type="button" class="btn btn-info">BESTPRODUCTS(最佳产品)</button>
+<div style="width: 300px; border: 2px solid;">
+    <table id="SKINCARE" class="table table-hover" >
+        <tr th:each="category : ${categoryListS}" >
+            　　<td class="proName" th:text="${category.CategoryName}"></td>
+                <td class="proId" th:text="${category.CategoryId}" ></td>
+        </tr>
+    </table>
 
-</table>
+</div>
+
 
 <script>
     $(function () {
- }
+
+		$('.btn-primary').hover(function () {
+ 		    $("#SKINCARE").show();
+ 		 })
+
+        $(".proName").click(function(){
+            var proId = $(this).next().html();
+            console.debug(proId)
+            $.ajax({url:"/getinfo",
+                   data:{proId :proId},
+                   success:function (d) {
+                       alert(d);
+                   }
+            })
+
+        })
+
+ })
 
 </script>
 </body>
