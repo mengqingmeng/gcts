@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}" />
@@ -8,6 +9,7 @@
     <title>Title</title>
 </head>
 <body>
+    <!--/*@thymesVar id="jobs" type="org.json.JSONObject"*/-->
     <div th:each="job: ${jobs}" class="list-unstyled">
         <ul th:each="aa :${job}">
             <li th:text="${aa}"></li>
