@@ -3,12 +3,14 @@ package com.example.scrapy;
 import com.example.result.Result;
 import com.example.util.HttpClientUtil;
 import com.example.util.UnirestUtil;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -74,7 +77,7 @@ public class GcftScrapy {
         }
     }
 
-    public void dealGcftDetail(JSONObject detail) throws IOException {
+    public void dealGcftDetail(JSONObject detail) throws IOException, JSONException {
         JSONArray sjscqyList = detail.getJSONArray("sjscqyList");//实际生产企业
         JSONObject scqyUnitinfo = detail.getJSONObject("scqyUnitinfo");//生产企业单元信息
         JSONArray pfList = detail.getJSONArray("pfList");//成分列表

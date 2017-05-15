@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.entity.BeautyProduct;
 import org.springframework.boot.autoconfigure.jersey.JerseyProperties.Type;
 
 import com.example.entity.BeautyCategory;
@@ -14,13 +15,21 @@ import com.example.entity.BeautyCategory;
  * */
 
 public class PediaService {
-    public static void main(){
 
-    	 //String url = GetConnect.GetCategoryByName(156); //通过类别id获得url
-    	 String url="";
+	public static List<BeautyCategory> categoryList = new ArrayList<>();
+
+    public static void main(int proId){
+		String url = ""; //通过类别id获得url
+
+		for (BeautyCategory  b : categoryList ){
+			if (b.getCategoryId()==proId){
+				url=b.getUrl();
+			}
+		}
     	 System.out.println("通过类别id获得的url："+url);
     	 int page  = GetPediaInfo.GetPage(url);             //通过类别url获得页数
     	 System.out.println("通过类别url获得页数 :" +page);
+    	 List<BeautyProduct> BeautyProducts = new ArrayList<>();
     	 for(int i =1; i<=page;i++){
     		 Date startDate = new Date();
     		 SimpleDateFormat sdf  = new SimpleDateFormat("hh:mm:ss");
@@ -29,13 +38,14 @@ public class PediaService {
     		 System.out.println("得翻页后的类别url:"+pageUrl);
     		 List<String> urls = GetPediaInfo.getUrlList(pageUrl);   //通过类别url获得单页url
     		 for(String s : urls){
-    			 //GetConnect.insertProduct(GetPediaInfo.GetProductDetail(s));  //通过每个URL爬取产品信息,并保存
+				 BeautyProducts.add(GetPediaInfo.GetProductDetail(s));//过每个URL爬取产品信息
     		 }
     		 Date endDate = new Date();
     		 long longTime = (endDate.getTime()-startDate.getTime())/1000;
     		 long mm =  longTime/60;
     		 long ss = longTime%60;
     		 System.out.println("第"+i+"页结束，耗时"+mm+"分"+ss+"秒");
+
     	 } 
     	 System.out.println("当前类别执行完毕!");
     }
@@ -45,7 +55,6 @@ public class PediaService {
      */
     
     public static List<BeautyCategory> updateCategory (){
-    	List<BeautyCategory> categoryList =null;
     	return categoryList = GetPediaInfo.GetCategory();
     }
     /**

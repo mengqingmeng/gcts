@@ -60,7 +60,13 @@ public class GetPediaInfo {
 		beautyProduct.setEXPERTREVIEWS(EXPERTREVIEWS.get(0).text());
 		beautyProduct.setCOMMUNITYREVIEWS(EXPERTREVIEWS.get(1).text());
 		beautyProduct.setCLAIMS(EXPERTREVIEWS.get(2).text());
-		beautyProduct.setINGREDIENTS(EXPERTREVIEWS.get(3).text());
+		String INGREDIENTSs = EXPERTREVIEWS.get(3).text();
+		String[] INGREDIENTa = INGREDIENTSs.split(",");
+		List<String> INGREDIENT = new ArrayList<>();
+		for(String s:INGREDIENTa){
+			INGREDIENT.add(s);
+		}
+		beautyProduct.setINGREDIENTS(INGREDIENT);
 		beautyProduct.setBRANDOVERVIEW(EXPERTREVIEWS.get(4).text());
 		beautyProduct.toString();
         return beautyProduct;
@@ -79,8 +85,8 @@ public class GetPediaInfo {
 	}
 	/**
 	 * 根据类别获取页数
-	 * @param categoryOne
-	 * @param categoryTwo
+	 * @param
+	 * @param
 	 * @return
 	 */
 	public static int GetPage(String url){
@@ -94,6 +100,7 @@ public class GetPediaInfo {
 	 * @return
 	 */
 	public static List<BeautyCategory> GetCategory(){
+		int id = 0;
     	List<BeautyCategory > beautyCategorys = new ArrayList();    	
 	    String url = "https://www.beautypedia.com";
     	Document doc = GetDoc.getDoc(url);
@@ -113,12 +120,13 @@ public class GetPediaInfo {
     		default:
     			break;
     		}
-    		
     		Elements cc = e.get(y).select("div.column");
     		for(int i=0 ; i<cc.size();i++){
     			Elements ccc = cc.get(i).select("a.submenu-item");
     			for(Element ee : ccc){
+    				id++;
     				BeautyCategory beautyCategory = new BeautyCategory();
+					beautyCategory.setCategoryId(id);
     				beautyCategory.setCategoryName(ee.text());
     				beautyCategory.setUrl("https://www.beautypedia.com/"+ee.attr("href"));
     				beautyCategory.setType(types);
