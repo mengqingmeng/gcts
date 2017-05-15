@@ -9,7 +9,6 @@
     <style>
         red{color:red;}
         #result-con{margin-top: 10px;}
-        .hidden{display: none;}
     </style>
 </head>
 <body>
@@ -37,8 +36,8 @@
         </div>
         <br />
         <button type="button" class="btn btn-info" id="start">开始</button>
-        <div id="result-con" class="hidden">
-            <span>开始爬取：第</span><span id="status"></span><span>页</span>
+        <div id="result-con" style="display: none;">
+            <span>开始爬取</span>
         </div>
     </div>
 <script>
@@ -65,12 +64,32 @@
                     $('#start').attr('disabled',"true");
                 },
                 success:function (d) {
-                    if(d='succ')
+                    if(d=='succ'){
                         $('#result-con').show();
+                    }
+
+
+
                 }});
         });
     })
 
+    function getCookie(Name) {
+        var search = Name + "=" ;
+        if(document.cookie.length > 0) {
+            offset = document.cookie.indexOf(search) ;
+            if(offset > -1) {
+                offset += search.length ;
+                end = document.cookie.indexOf(";", offset)
+                if(end > -1) {
+                    end = document.cookie.length ;
+                }
+                return unescape(document.cookie.substring(offset, end)) ;
+            }  else {
+                return "" ;
+            }
+        }
+    }
 </script>
 </body>
 </html>

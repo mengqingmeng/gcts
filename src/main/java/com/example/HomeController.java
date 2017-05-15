@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.scrapy.Scrapy;
+import com.example.scrapy.GcftScrapy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
     private final static Logger logger = LoggerFactory.getLogger(HomeController.class);
     @Autowired
-    Scrapy scrapy;
-    
+    GcftScrapy gcftScrapy;
+
     @RequestMapping("/")
     public String home(){
         return "index";
@@ -27,7 +27,7 @@ public class HomeController {
     public String start(@RequestParam("fromPage") Integer fromePage,
                         @RequestParam("endPage") Integer endPage,
                         @RequestParam("ku") String ku) throws Exception {
-        scrapy.Scrapy(fromePage,endPage,ku);
+        gcftScrapy.Scrapy(fromePage,endPage,ku);
         return "succ";
     }
 }

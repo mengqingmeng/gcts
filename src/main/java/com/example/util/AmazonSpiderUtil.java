@@ -32,7 +32,7 @@ public final class AmazonSpiderUtil {
         HtmlPage page = webClient.getPage(webRequest);
         //webClient.waitForBackgroundJavaScript(1000);
         ret = page.asXml();
-        webClient.closeAllWindows();
+        webClient.close();
         return ret;
     }
 

@@ -4,9 +4,9 @@ package com.example.entity;
 public class BeautyCategory {
 	
 	public static enum Type{
-		SKINCARE,      //����Ʒ
-		MAKEUP,        //��ױƷ
-		BESTPRODUCTS   //��Ѳ�Ʒ
+		SKINCARE,      //护肤品
+		MAKEUP,        //化妆品
+		BESTPRODUCTS   //最佳产品
 	}
 	private Integer CategoryId;
 	private String CategoryName;
