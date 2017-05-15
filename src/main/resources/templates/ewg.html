@@ -6,15 +6,21 @@
     <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}" />
     <script th:src="@{/jquery-3.2.1.min.js}"></script>
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
-    <title>Title</title>
+    <title>ewg</title>
 </head>
 <body>
-    <!--/*@thymesVar id="jobs" type="org.json.JSONObject"*/-->
-    <div th:each="job: ${jobs}" class="list-unstyled">
-        <ul th:each="aa :${job}">
-            <li th:text="${aa}"></li>
+
+    <!--/*@thymesVar id="jobs" type=""*/-->
+        <ul th:each="job :${jobs}">
+            <!--/*@thymesVar id="name" type=""*/-->
+            <li th:text="${job.name}"></li>
+            <ul th:each="classify:${job.classifies}">
+                <li th:text="${classify.type}"></li>
+                <ul th:each="url:${classify.urls}">
+                    <a th:text="${url.name}" th:href="${'https://www.ewg.org'+url.url}"></a>
+                </ul>
+            </ul>
         </ul>
-    </div>
 
 </body>
 </html>

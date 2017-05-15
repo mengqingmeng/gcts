@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.beautyPediaSprider.PediaService;
 import com.example.entity.BeautyCategory;
 import com.example.scrapy.GcftScrapy;
@@ -13,8 +15,7 @@ import com.example.scrapy.GcftScrapy;
 import com.example.util.UnirestUtil;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -114,15 +115,15 @@ public class HomeController {
                             JSONObject urlWithName = new JSONObject();
                             urlWithName.put("url", a.attr("href"));
                             urlWithName.put("name", a.text());
-                            urlWithNames.put(urlWithName);
+                            urlWithNames.add(urlWithName);
                         }
                         typeWithUrls.put("urls", urlWithNames);
 
-                        classifies.put(typeWithUrls);
+                        classifies.add(typeWithUrls);
                     }
 
                     job.put("classifies", classifies);
-                    jobs.put(job);
+                    jobs.add(job);
                 }
             }
         }
