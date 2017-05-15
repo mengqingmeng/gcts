@@ -15,7 +15,7 @@ import java.net.URL;
  * Created by 陈成 on 2017/5/12.
  */
 @Component
-public class AmazonSpiderUtil {
+public final class AmazonSpiderUtil {
 
     public String getXmlByHtmlunit(String url) throws Exception {
 

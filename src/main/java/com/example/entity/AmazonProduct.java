@@ -19,7 +19,7 @@ public class AmazonProduct {
     private String saleWell;
     private String size;
    // private List<AmazonProductInfoMation> amazonProductInfoMations;
-    private String amazonProductInfoMations;
+    private String infoMations;
 
     public int getId() {
         return id;
@@ -117,11 +117,11 @@ public class AmazonProduct {
         this.amazonProductInfoMations = amazonProductInfoMations;
     }*/
 
-    public String getAmazonProductInfoMations() {
-        return amazonProductInfoMations;
+    public String getInfoMations() {
+        return infoMations;
     }
 
-    public void setAmazonProductInfoMations(String amazonProductInfoMations) {
-        this.amazonProductInfoMations = amazonProductInfoMations;
+    public void setAmazonProductInfoMations(String infoMations) {
+        this.infoMations = infoMations;
     }
 }

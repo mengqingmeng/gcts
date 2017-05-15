@@ -9,7 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -19,15 +21,19 @@ public class GctsApplicationTests {
 	public void contextLoads() {
 	}
 	@Test
-	public void testRWU(){
-		ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/test.xls");
+	public void testRWU() throws FileNotFoundException {
+		ReadAndWritePoiUtil pu = ReadAndWritePoiUtil.getInstance("D:/Data/amazon/r1t.xlsx");
 		AmazonProduct p = new AmazonProduct();
 		p.setAboutThisProduct("123123");
 		p.setCountAnswers("122");
 		p.setId(123);
-		p.setAmazonProductInfoMations("w:s:SDa:fas");
-		pu.writeTitleName(p);
-	//	pu.writeProuctInfo(p,2);
+		p.setAmazonProductInfoMations("w<:>s<:>SDa<:>fas");
+		List<AmazonProduct> productList = new ArrayList<>();
+		for(int i  = 0;i<100000;i++) {	p.setId(123+i);
+		 productList.add(p);
+		}
+		pu.writeProuctInfo(productList);
+
 	}
 
 	@Test
@@ -36,10 +42,4 @@ public class GctsApplicationTests {
 		amazonUrlSprider.startAmazonUrlSprider("https://www.amazon.com/Beauty-Makeup-Skin-Hair-Products/b/ref=nav_shopall_bty?ie=UTF8&node=3760911","Face");
 	}
 
-	@Test
-	public void testrow() throws IOException {
-		ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/test.xls");
-		int i = pu.getRowCount();
-		System.out.print(i);
-	}
 }

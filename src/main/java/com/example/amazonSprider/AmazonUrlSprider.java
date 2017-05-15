@@ -1,5 +1,6 @@
 package com.example.amazonSprider;
 
+import com.example.entity.AmazonProduct;
 import com.example.entity.AmazonProductUrl;
 import com.example.util.AmazonSpiderUtil;
 import com.example.util.ReadAndWritePoiUtil;
@@ -10,6 +11,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -109,6 +111,7 @@ public class AmazonUrlSprider {
         return urls;
     }
 
+/*
     public void startAmazonUrlSprider(String url,String clazz){
         Document doc = null;
         Document temp = null;
@@ -118,6 +121,10 @@ public class AmazonUrlSprider {
             doc = su.getDocument(getUrls(url).get(clazz));
             pageCount =getPageCount(doc);
             urls.addAll(saveProductUrl(doc));
+            ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/Data/Amazon/Url.xls");
+            for(AmazonProductUrl u:urls) {
+                pu.writeProuctInfo(u);
+            }
             int i = 0 ;
             for(int m = 1 ; m  < pageCount ; m++) {
 
@@ -126,25 +133,79 @@ public class AmazonUrlSprider {
                 temp = getNextPage(doc);
                 if (temp != null) {
                     doc = temp;
+                    urls.addAll(saveProductUrl(doc, m));
                 } else {
                     m--;
                 }
-                urls.addAll(saveProductUrl(doc, m));
-                ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/Data/Amazon/Url.xlsx");
+
+
 
                 for(AmazonProductUrl u:urls) {
-                   // pu.writeProuctInfo(u, i++);
+                    pu.writeProuctInfo(u);
                 }
                 System.out.println(m);
             }
 
         } catch (Exception e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
 
     }
     }
+*/
+
+
+    public void startAmazonUrlSprider(String url,String clazz){
+        Document doc = null;
+        Document temp = null;
+        AmazonProductSprider ps = null;
+        int pageCount;
+        List<AmazonProductUrl> urls = new ArrayList<>();
+        ReadAndWritePoiUtil rw = null;
+        String path = "d:/data/amazon/amazon.xlsx";
+        try {
+            rw = ReadAndWritePoiUtil.getInstance(path);
+        } catch (FileNotFoundException e) {
+            System.out.println("创建excel 失败");
+            e.printStackTrace();
+        }
+        List<AmazonProduct> products = new ArrayList<>();
+        try {
+            ps = new AmazonProductSprider();
+            doc = su.getDocument(getUrls(url).get(clazz));
+            pageCount =getPageCount(doc);
+            urls.addAll(saveProductUrl(doc));
+         //   ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/Data/Amazon/Url.xls");
+                ps.startAmazonProductSprider(urls);
+          //  int i = 0 ;
+            for(int m = 1 ; m  < pageCount ; m++) {
+
+                //doc = Jsoup.parse(sm.getNextPage(doc));
+                urls.clear();
+                temp = getNextPage(doc);
+                if (temp != null) {
+                    doc = temp;
+                    urls.addAll(saveProductUrl(doc, m));
+                } else {
+                    m--;
+                }
+
+                products.addAll( ps.startAmazonProductSprider(urls));
+                if(products.size()>100){
+                    rw.writeProuctInfo(products);
+                    products.clear();
+                }
+                System.out.println(m);
+            }
+
+        } catch (Exception e1) {
+
+            e1.printStackTrace();
+        }
+
+    }
+}
 
 
   /*  public static void main(String[] args) throws Exception {
