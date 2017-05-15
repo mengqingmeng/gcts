@@ -96,7 +96,7 @@ public final class ReadAndWritePoiUtil {
             if (objs.size() > 0)
                 writeTitleName(objs.get(0));
         }
-        lineNum = lineNum + 1;
+
         StringBuffer sb = null;
         String name = null;
         Object val = null;
@@ -106,7 +106,7 @@ public final class ReadAndWritePoiUtil {
         Cell cell1 = null;
         Field[] fields = null;
         for (Object o : objs) {
-           row =  sheet.createRow(lineNum++);
+           row =  sheet.createRow(++lineNum);
             fields = o.getClass().getDeclaredFields();
 
             for (int i = 0; i < fields.length; i++) {

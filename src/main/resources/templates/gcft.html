@@ -29,7 +29,7 @@
             </div>
             <div class="radio">
                 <label for="jk">
-                    <input type="radio" value="jk" name="ku" id="jk"/>
+                    <input type="radio" value="jk" name="ku" id="jk" disabled/>
                     进口化妆品库
                 </label>
             </div>
@@ -37,7 +37,7 @@
         <br />
         <button type="button" class="btn btn-info" id="start">开始</button>
         <div id="result-con" style="display: none;">
-            <span>开始爬取</span>
+            <span>开始爬取</span><span id="process"></span>
         </div>
     </div>
 <script>
@@ -57,19 +57,15 @@
                 return;
             }
 
-            $.ajax({url:"/start",
-                async:false,
+            $.ajax({url:"/startGcft",
                 data:{fromPage:fromPage,endPage:endPage,ku:select.val()},
                 beforeSend:function () {
                     $('#start').attr('disabled',"true");
                 },
                 success:function (d) {
                     if(d=='succ'){
-                        $('#result-con').show();
+                        alert("爬取完成");
                     }
-
-
-
                 }});
         });
     })

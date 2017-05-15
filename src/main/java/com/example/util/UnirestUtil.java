@@ -39,4 +39,12 @@ public class UnirestUtil {
         return result;
     }
 
+    public static HttpResponse<String> get(String url) throws UnirestException {
+        HttpResponse<String>  response = Unirest.get(url)
+                .header("content-type", "application/x-www-form-urlencoded")
+                .header("cache-control", "no-cache")
+                .asString();
+        return response;
+    }
+
 }

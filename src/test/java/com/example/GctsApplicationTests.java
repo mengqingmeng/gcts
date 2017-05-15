@@ -2,7 +2,11 @@ package com.example;
 
 import com.example.amazonSprider.AmazonUrlSprider;
 import com.example.entity.AmazonProduct;
+import com.example.util.DateUtil;
 import com.example.util.ReadAndWritePoiUtil;
+import com.example.util.UnirestUtil;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,29 +26,30 @@ public class GctsApplicationTests {
 	}
 	@Test
 	public void testRWU() throws FileNotFoundException {
-		ReadAndWritePoiUtil pu = ReadAndWritePoiUtil.getInstance("D:/Data/amazon/r1t.xlsx");
-		AmazonProduct p = new AmazonProduct();
-		p.setAboutThisProduct("123123");
-		p.setCountAnswers("122");
-		p.setId(123);
-		List<String> strings = new ArrayList<>();
-		for(int i= 0 ;i<5;i++){
-			strings.add("aaa"+i);
-
-		}
-		p.setInfoMations(strings);
-		List<AmazonProduct> productList = new ArrayList<>();
-		for(int i  = 0;i<100;i++) {	p.setId(123+i);
-		 productList.add(p);
-		}
-		pu.writeProuctInfo(productList);
+//		ReadAndWritePoiUtil pu = ReadAndWritePoiUtil.getInstance("C:/HBSData/amazon/r1t.xlsx");
+//		AmazonProduct p = new AmazonProduct();
+//		p.setAboutThisProduct("123123");
+//		p.setCountAnswers("122");
+//		p.setId(123);
+//		List<String> strings = new ArrayList<>();
+//		for(int i= 0 ;i<5;i++){
+//			strings.add("aaa"+i);
+//
+//		}
+//		p.setInfoMations(strings);
+//		List<AmazonProduct> productList = new ArrayList<>();
+//		for(int i  = 0;i<100;i++) {	p.setId(123+i);
+//		 productList.add(p);
+//		}
+//		pu.writeProuctInfo(productList);
 
 	}
 
 	@Test
-	public void testUrlSp(){
-		AmazonUrlSprider amazonUrlSprider = new AmazonUrlSprider();
-		amazonUrlSprider.startAmazonUrlSprider("https://www.amazon.com/Beauty-Makeup-Skin-Hair-Products/b/ref=nav_shopall_bty?ie=UTF8&node=3760911","Face");
+	public void testUrlSp() throws Exception {
+//		AmazonUrlSprider amazonUrlSprider = new AmazonUrlSprider();
+//		amazonUrlSprider.startAmazonUrlSprider("https://www.amazon.com/Beauty-Makeup-Skin-Hair-Products/b/ref=nav_shopall_bty?ie=UTF8&node=3760911","Face");
+
 	}
 
 }
