@@ -1,11 +1,13 @@
 package com.example.beautyPediaSprider;
 
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.example.entity.BeautyProduct;
+import com.example.util.ReadAndWritePoiUtil;
 import org.springframework.boot.autoconfigure.jersey.JerseyProperties.Type;
 
 import com.example.entity.BeautyCategory;
@@ -44,7 +46,16 @@ public class PediaService {
     		 long longTime = (endDate.getTime()-startDate.getTime())/1000;
     		 long mm =  longTime/60;
     		 long ss = longTime%60;
-    		 System.out.println("第"+i+"页结束，耗时"+mm+"分"+ss+"秒");
+			 try {
+			 	 String path = "d:/text.xlsx";
+				 ReadAndWritePoiUtil eadAndWritePoiUtil= ReadAndWritePoiUtil.getInstance(path);  //保存路径
+				 eadAndWritePoiUtil.writeProuctInfo(BeautyProducts);                                  //保存
+			 } catch (FileNotFoundException e) {
+				 e.printStackTrace();
+			 }
+
+
+			 System.out.println("第"+i+"页结束，耗时"+mm+"分"+ss+"秒");
 
     	 } 
     	 System.out.println("当前类别执行完毕!");

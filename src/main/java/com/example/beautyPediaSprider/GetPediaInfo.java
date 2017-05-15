@@ -14,7 +14,7 @@ import com.example.util.GetDoc;
 
 
 public class GetPediaInfo {
-	
+
     /**
      * 通过类别url获得单页URL列表
      * @param url
