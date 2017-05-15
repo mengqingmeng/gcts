@@ -126,6 +126,7 @@ public class HomeController {
                 }
             }
         }
+        logger.info("jobs:"+jobs.toString());
         model.put("jobs",jobs);
         return "ewg";
     }

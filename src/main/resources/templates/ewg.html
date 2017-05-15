@@ -2,15 +2,17 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <script th:src="@{/jquery-3.2.1.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
     <title>Title</title>
 </head>
 <body>
-    <div>
-        <ul th:each="job,state:${jobs}">
-           <li th:text="${job}">
-               <ul th:each=""></ul>
-           </li>
+    <div th:each="job: ${jobs}" class="list-unstyled">
+        <ul th:each="aa :${job}">
+            <li th:text="${aa}"></li>
         </ul>
     </div>
+
 </body>
 </html>

@@ -102,7 +102,6 @@ public class GcftScrapy {
     }
 
     public GCFTProduct dealGcftDetail(JSONObject detail) throws IOException {
-    public void dealGcftDetail(JSONObject detail) throws IOException, JSONException {
         JSONArray sjscqyList = detail.getJSONArray("sjscqyList");//实际生产企业
         JSONObject scqyUnitinfo = detail.getJSONObject("scqyUnitinfo");//生产企业单元信息
         JSONArray pfList = detail.getJSONArray("pfList");//成分列表
