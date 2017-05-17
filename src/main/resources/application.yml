@@ -1,0 +1,10 @@
+spring:
+  thymeleaf:
+    cache: false
+  http:
+    encoding:
+      force: true
+      charset: utf-8
+server:
+  tomcat:
+    uri-encoding: UTF-8

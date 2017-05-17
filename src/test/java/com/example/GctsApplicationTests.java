@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,8 @@ public class GctsApplicationTests {
 	public void testUrlSp() throws Exception {
 //		AmazonUrlSprider amazonUrlSprider = new AmazonUrlSprider();
 //		amazonUrlSprider.startAmazonUrlSprider("https://www.amazon.com/Beauty-Makeup-Skin-Hair-Products/b/ref=nav_shopall_bty?ie=UTF8&node=3760911","Face");
-
+		String res = URLEncoder.encode("Bath Oil/salts/soak","utf-8");
+		System.out.println("res:"+res);
 	}
 
 }

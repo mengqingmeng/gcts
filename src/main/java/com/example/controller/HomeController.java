@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.beautyPediaSprider.PediaService;
 import com.example.entity.BeautyCategory;
+import com.example.entity.EWGProduct;
 import com.example.scrapy.GcftScrapy;
 
 import com.example.util.UnirestUtil;
@@ -87,6 +88,12 @@ public class HomeController {
         return "succ";
     }
 
+    /**
+     * ewg 爬虫列表展示页
+     * @param model
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/ewg")
     public String ewg(ModelMap model) throws Exception {
         String url = "https://www.ewg.org/skindeep/";
@@ -127,8 +134,18 @@ public class HomeController {
                 }
             }
         }
-        logger.info("jobs:"+jobs.toString());
+        //logger.info("jobs:"+jobs.toString());
         model.put("jobs",jobs);
         return "ewg";
     }
+
+    @ResponseBody
+    @RequestMapping("/ewgProduct")
+    public String ewgProduct(@RequestParam("url") String  url) throws IOException {
+
+        return "爬取成功";
+
+    }
+
+
 }
