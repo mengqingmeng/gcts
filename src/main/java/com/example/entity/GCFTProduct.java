@@ -16,7 +16,10 @@ public class GCFTProduct {
     private String provinceConfirm;//备案日期
     private String enterpriseAddress;//企业地址
     private String enterpriseName;//企业名称
-    private String sjscqys;//实际生产企业，是个json数组
+    //private String sjscqys;//实际生产企业，是个json数组
+    private String sjscqyName;//实际生产企业名称
+    private String sjscqyAddress;//实际生产企业地址
+    private String sjscqyHealth;//实际生产企业卫生许可证号
     private List<String> infoMations;//成分
 
     public String getName() {
@@ -91,12 +94,36 @@ public class GCFTProduct {
         this.enterpriseName = enterpriseName;
     }
 
-    public String getSjscqys() {
-        return sjscqys;
+//    public String getSjscqys() {
+//        return sjscqys;
+//    }
+//
+//    public void setSjscqys(String sjscqys) {
+//        this.sjscqys = sjscqys;
+//    }
+
+    public String getSjscqyName() {
+        return sjscqyName;
     }
 
-    public void setSjscqys(String sjscqys) {
-        this.sjscqys = sjscqys;
+    public void setSjscqyName(String sjscqyName) {
+        this.sjscqyName = sjscqyName;
+    }
+
+    public String getSjscqyAddress() {
+        return sjscqyAddress;
+    }
+
+    public void setSjscqyAddress(String sjscqyAddress) {
+        this.sjscqyAddress = sjscqyAddress;
+    }
+
+    public String getSjscqyHealth() {
+        return sjscqyHealth;
+    }
+
+    public void setSjscqyHealth(String sjscqyHealth) {
+        this.sjscqyHealth = sjscqyHealth;
     }
 
     public List<String> getInfoMations() {
@@ -106,4 +133,5 @@ public class GCFTProduct {
     public void setInfoMations(List<String> infoMations) {
         this.infoMations = infoMations;
     }
+
 }

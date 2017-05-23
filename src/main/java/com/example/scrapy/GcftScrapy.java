@@ -2,10 +2,14 @@ package com.example.scrapy;
 
 import com.example.entity.AmazonProduct;
 import com.example.entity.GCFTProduct;
+import com.example.entity.JKProduct;
 import com.example.result.Result;
 import com.example.util.*;
 import com.example.util.UnirestUtil;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,6 +18,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +35,20 @@ import javax.servlet.http.HttpSession;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import sun.nio.ch.Net;
 
 /**
  * Created by mqm on 2017/5/11.
  */
 @Component
 public class GcftScrapy {
+    @Autowired JKScrapy jkScrapy;
+
 
     private final static Logger logger = LoggerFactory.getLogger(GcftScrapy.class);
 
@@ -48,9 +61,20 @@ public class GcftScrapy {
                 logger.info("国产非特殊用途，正在爬取，第"+ i+"页");
             }
             logger.info("******国产非特殊用途爬取完成**********");
+        }else if(ku.equals("jk")){
+            for(int i=fromPage;i<=toPage;i++){
+                jkScrapy.jk(i);
+                logger.info("进口化妆品库，正在爬取，第"+ i+"页");
+            }
+            logger.info("******进口化妆品库爬取完成**********");
         }
     }
 
+    /**
+     * 国产非特殊用途
+     * @param pageIndex 页数
+     * @throws Exception
+     */
     public void gcft(Integer pageIndex) throws Exception {
         String url = "http://125.35.6.80:8080/ftba/itownet/fwAction.do?method=getBaNewInfoPage";
 
@@ -101,6 +125,12 @@ public class GcftScrapy {
         }
     }
 
+    /**
+     * 获取国产产品详细内容
+     * @param detail
+     * @return
+     * @throws IOException
+     */
     public GCFTProduct dealGcftDetail(JSONObject detail) throws IOException {
         JSONArray sjscqyList = detail.getJSONArray("sjscqyList");//实际生产企业
         JSONObject scqyUnitinfo = detail.getJSONObject("scqyUnitinfo");//生产企业单元信息
@@ -117,16 +147,27 @@ public class GcftScrapy {
 
         String enterprise_address = scqyUnitinfo.getString("enterprise_address");//企业地址
         String enterprise_name = scqyUnitinfo.getString("enterprise_name");//企业名称
-        //生产厂家
-        JSONArray sjscqys = new JSONArray();
-        for (int i=0;i<sjscqyList.length();i++){
-            JSONObject scqy = sjscqyList.getJSONObject(i);
-            JSONObject scqyInfo = new JSONObject();
-            scqyInfo.put("企业名称",scqy.getString("enterprise_name"));
-            scqyInfo.put("企业地址",scqy.getString("enterprise_address"));
-            scqyInfo.put("卫生许可证号",scqy.getString("enterprise_healthpermits"));
-            sjscqys.put(scqyInfo);
+        //生产厂家，现要求只取一家实际生产企业***
+        JSONObject firstSjscqy = sjscqyList.getJSONObject(0);
+        String sjscqyName="";
+        String sjscqyAddress="";
+        String sjscqyHelthPermits="";
+
+        if (firstSjscqy!=null){
+            sjscqyName=firstSjscqy.getString("enterprise_name");
+            sjscqyAddress=firstSjscqy.getString("enterprise_address");
+            sjscqyHelthPermits=firstSjscqy.getString("enterprise_healthpermits");
         }
+
+//        JSONArray sjscqys = new JSONArray();
+//        for (int i=0;i<sjscqyList.length();i++){
+//            JSONObject scqy = sjscqyList.getJSONObject(i);
+//            JSONObject scqyInfo = new JSONObject();
+//            scqyInfo.put("企业名称",scqy.getString("enterprise_name"));
+//            scqyInfo.put("企业地址",scqy.getString("enterprise_address"));
+//            scqyInfo.put("卫生许可证号",scqy.getString("enterprise_healthpermits"));
+//            sjscqys.put(scqyInfo);
+//        }
         //成分
         List<String> chengFens = new ArrayList<String>();
         for (int i=0;i<pfList.length();i++){
@@ -144,7 +185,10 @@ public class GcftScrapy {
         gcftProduct.setProvinceConfirm(provinceConfirm);
         gcftProduct.setEnterpriseAddress(enterprise_address);
         gcftProduct.setEnterpriseName(enterprise_name);
-        gcftProduct.setSjscqys(sjscqys.toString());
+        //gcftProduct.setSjscqys(sjscqys.toString());
+        gcftProduct.setSjscqyName(sjscqyName);
+        gcftProduct.setSjscqyAddress(sjscqyAddress);
+        gcftProduct.setSjscqyHealth(sjscqyHelthPermits);
         gcftProduct.setInfoMations(chengFens);
         return gcftProduct;
     }
