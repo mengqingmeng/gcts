@@ -79,6 +79,15 @@ public class HomeController {
 		PediaService.main(proId);
     	return "结束";
 	}
+
+    /**
+     * 药监局爬虫
+     * @param fromePage 开始页码
+     * @param endPage   结束页码
+     * @param ku    库的类型 进口库还是国产非特殊用途
+     * @return
+     * @throws Exception
+     */
     @ResponseBody
     @RequestMapping("/startGcft")
     public String startGcft(@RequestParam("fromPage") Integer fromePage,

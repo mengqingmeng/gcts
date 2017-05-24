@@ -13,12 +13,16 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
+import org.bytedeco.javacpp.opencv_core;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,11 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
+import static org.bytedeco.javacpp.opencv_imgcodecs.cvSaveImage;
+import static org.bytedeco.javacpp.opencv_imgproc.CV_GAUSSIAN;
+import static org.bytedeco.javacpp.opencv_imgproc.cvSmooth;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -112,7 +121,8 @@ public class GctsApplicationTests {
 //			outputStream.close();
 //		}
 		String s = jkScrapy.getVeriCode();
-		logger.info("ddd"+s);
+		logger.info("ddd:"+s);
 	}
+
 
 }

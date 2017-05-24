@@ -4,12 +4,7 @@ import com.example.entity.JKProduct;
 import com.example.result.Result;
 import com.example.util.UnirestUtil;
 import com.example.util.VeriCodeProc;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,9 +12,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import sun.jvm.hotspot.runtime.Bytes;
 
-import javax.imageio.stream.FileImageOutputStream;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,14 +46,17 @@ public class JKScrapy {
         System.out.println("conn.getResponseCode():  " + response.statusCode());
         if (response.statusCode() != 404) {
             byte[] data = response.bodyAsBytes();
-            //String result = VeriCodeProc.veriCode(data,60,20);
-            //logger.info("result:"+result);
-            FileOutputStream outputStream = new FileOutputStream("/Users/mqm/Desktop/a.png");
-            outputStream.write(data);
-            outputStream.close();
+            String result = VeriCodeProc.veriCode(data,60,20);
+            logger.info("result:"+result);
+            return result;
+//            FileOutputStream outputStream = new FileOutputStream("/Users/mqm/Desktop/a.png");
+//            outputStream.write(data);
+//            outputStream.close();
+        }else{
+            return "haha";
         }
 
-        return "";
+
     }
 
 }
