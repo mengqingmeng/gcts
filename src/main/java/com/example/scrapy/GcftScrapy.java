@@ -57,14 +57,16 @@ public class GcftScrapy {
     public void Scrapy(Integer fromPage,Integer toPage,String ku) throws Exception {
         if (ku.equals("gcft")){//国产非特殊用途库
             for(int i=fromPage;i<=toPage;i++){
-                gcft(i);
                 logger.info("国产非特殊用途，正在爬取，第"+ i+"页");
+                gcft(i);
+
             }
             logger.info("******国产非特殊用途爬取完成**********");
         }else if(ku.equals("jk")){
             for(int i=fromPage;i<=toPage;i++){
-                jkScrapy.jk(i);
                 logger.info("进口化妆品库，正在爬取，第"+ i+"页");
+                jkScrapy.jk(i);
+
             }
             logger.info("******进口化妆品库爬取完成**********");
         }

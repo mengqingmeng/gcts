@@ -178,7 +178,6 @@ public class JKScrapy {
             cookies=getCookies();
         String urlPath = "http://123.127.80.6/servlet/GetImageServlet?sn=randomImage";
         Connection conn = Jsoup.connect(urlPath).timeout(10000).cookies(cookies);
-        conn.post();
         Connection.Response response = conn.execute();
         byte[] data = response.bodyAsBytes();
         InputStream is = new ByteArrayInputStream(data);
