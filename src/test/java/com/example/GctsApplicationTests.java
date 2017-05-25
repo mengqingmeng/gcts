@@ -10,6 +10,10 @@ import com.example.util.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
+import net.sourceforge.tess4j.util.ImageHelper;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
@@ -20,9 +24,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -86,43 +89,24 @@ public class GctsApplicationTests {
 
 	@Test
 	public void testjk() throws Exception{
-		String urlPath ="http://123.127.80.6/servlet/GetImageServlet?sn=randomImage";
-//		org.json.JSONObject params = new org.json.JSONObject();
-//		params.put("tableId",69);
-//		params.put("State",1);
-//		params.put("bcId","124053679279972677481528707165");
-//		params.put("tableName","TABLE69");
-//		params.put("viewsubTitleName","COLUMN805,COLUMN811");
-//		params.put("tableView",URLEncoder.encode("进口化妆品","utf-8"));
-		//Result result = UnirestUtil.ajaxPostStr(url,"tableId=69&State=1&tableName=TABLE69&curstart=1");
-
-//		HttpResponse<String> response = Unirest.get("http://123.127.80.6/servlet/GetImageServlet?sn=randomImage")
-//				.header("Content-Type","image/jpeg")
-//				.asString();
-//		int status = response.getStatus();
-//		String text = response.getStatusText();
-//		if (status == 200 && text.equals("OK")){
-//			String is = response.getBody();
-//
-//			//byte[] bs = jkScrapy.toByteArray(is);
-//			//jkScrapy.byte2image(bs,"/Users/mqm/Desktop/a");
-//			//return VeriCodeProc.veriCode(toByteArray(is), 60, 20);
-//		}else{
-//			logger.info("result:"+text);
-//		}
-//		Connection conn = Jsoup.connect(urlPath).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36");
-//		Connection.Response response = conn.execute();
-//		System.out.println("urlPath: " + urlPath);
-//		System.out.println("conn.getResponseCode():  " + response.statusCode());
-//		if (response.statusCode() != 404) {
-//			byte[] data = response.bodyAsBytes();
-//			FileOutputStream outputStream = new FileOutputStream("/Users/mqm/Desktop/a.png");
-//			outputStream.write(data);
-//			outputStream.close();
-//		}
-		String s = jkScrapy.getVeriCode();
-		logger.info("ddd:"+s);
+		Result<String> result= jkScrapy.getVeriCode();
+		logger.info("data:"+result.getData());
+		logger.info("message:"+result.getMessage());
+		logger.info("code:"+result.getCode());
 	}
 
+	@Test
+	public void tess4j() throws IOException {
+		File imageFile = new File("C:\\Users\\MQM\\Desktop\\a.tif");
+		BufferedImage grayImage = ImageHelper.convertImageToBinary(ImageIO.read(imageFile));
+		ITesseract instance = new Tesseract();  // JNA Interface Mapping
+		// ITesseract instance = new Tesseract1(); // JNA Direct Mapping
+		try {
+			String result = instance.doOCR(grayImage);
+			System.out.println(result);
+		} catch (TesseractException e) {
+			System.err.println(e.getMessage());
+		}
+	}
 
 }
