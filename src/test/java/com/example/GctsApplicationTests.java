@@ -14,14 +14,9 @@ import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import net.sourceforge.tess4j.util.ImageHelper;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.bytedeco.javacpp.opencv_core;
+import org.json.Cookie;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -38,13 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
-import static org.bytedeco.javacpp.opencv_imgcodecs.cvSaveImage;
-import static org.bytedeco.javacpp.opencv_imgproc.CV_GAUSSIAN;
-import static org.bytedeco.javacpp.opencv_imgproc.cvSmooth;
+import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -87,17 +76,10 @@ public class GctsApplicationTests {
 		System.out.println("res:"+res);
 	}
 
-	@Test
-	public void testjk() throws Exception{
-		Result<String> result= jkScrapy.getVeriCode();
-		logger.info("data:"+result.getData());
-		logger.info("message:"+result.getMessage());
-		logger.info("code:"+result.getCode());
-	}
 
 	@Test
 	public void tess4j() throws IOException {
-		File imageFile = new File("C:\\Users\\MQM\\Desktop\\a.tif");
+		File imageFile = new File("/Users/mqm/Desktop/a.png");
 		BufferedImage grayImage = ImageHelper.convertImageToBinary(ImageIO.read(imageFile));
 		ITesseract instance = new Tesseract();  // JNA Interface Mapping
 		// ITesseract instance = new Tesseract1(); // JNA Direct Mapping
@@ -109,4 +91,37 @@ public class GctsApplicationTests {
 		}
 	}
 
+	@Test
+	public void TT() throws UnirestException, IOException {
+
+		Map<String, String> cookies = null;
+		Connection conn = null;
+		Connection.Response response=null;
+		if (cookies==null){
+			conn = Jsoup.connect("http://123.127.80.6/sfda/ShowJSYQAction.do");
+			response = conn.execute();
+			cookies =response.cookies();
+		}
+		String code = jkScrapy.getVeriCode(cookies);
+		conn = Jsoup.connect("http://123.127.80.6/sfda/ShowJSYQAction.do?"+"PID=4a7f362c3aff91c0d83b05d526e71e9e&randomInt="+code+"&process=showNew")
+				.timeout(10000).cookies(cookies);
+		response = conn.execute();
+		String body = response.body();
+		logger.info("body:"+body);
+	}
+
+	@Test
+	public void dd() throws IOException {
+		Map<String, String> cookies = null;
+		String url ="http://123.127.80.6/sfda/ShowJSYQAction.do?PID=4a7f362c3aff91c0d83b05d526e71e9e";
+		if (cookies==null){
+			Connection conn = Jsoup.connect(url);
+			Connection.Response response = conn.execute();
+			cookies=response.cookies();
+		}
+		Connection conn = Jsoup.connect(url).cookies(cookies);
+		Connection.Response response = conn.execute();
+		String body = response.body();
+		logger.info("body:"+body);
+	}
 }

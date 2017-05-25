@@ -6,8 +6,8 @@ import java.util.List;
  * Created by mqm on 2017/5/23.
  */
 public class JKProduct {
-    private String chName;
-    private String engName;
+    private String chName;//中文名
+    private String engName;//英文名
     private String applyState;//备案状态
     private String clazz;//产品类别
     private String fromCountry;//出产国

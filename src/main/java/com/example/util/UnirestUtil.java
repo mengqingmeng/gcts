@@ -49,11 +49,23 @@ public class UnirestUtil {
                 .asString();
         return response;
     }
-    public static Result<String> ajaxPostStr(String url,String params) throws UnirestException {
+    public static Result<String> ajaxPostStr(String url,String params) throws UnirestException, InterruptedException {
         HttpResponse<String> response = Unirest.post(url)
                 .header("content-type", "application/x-www-form-urlencoded")
                 .header("cache-control", "no-cache")
                 .body(params)
+                .asString();
+        Result<String> result = new Result();
+        result.setCode(response.getStatus());
+        result.setMessage(response.getStatusText());
+        result.setData(response.getBody().toString());
+        return result;
+    }
+
+    public static Result<String> post(String url) throws UnirestException {
+        HttpResponse<String> response = Unirest.post(url)
+                .header("content-type", "application/x-www-form-urlencoded")
+                .header("cache-control", "no-cache")
                 .asString();
         Result<String> result = new Result();
         result.setCode(response.getStatus());
