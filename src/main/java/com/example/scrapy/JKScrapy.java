@@ -365,6 +365,7 @@ public class JKScrapy {
         InputStream is = new ByteArrayInputStream(data);
         BufferedImage grayImage = ImageHelper.convertImageToBinary(ImageIO.read(is));
         ITesseract instance = new Tesseract();  // JNA Interface Mapping
+        instance.setLanguage("eng");
         String code ="";
         try {
             code = instance.doOCR(grayImage).substring(0,4);
