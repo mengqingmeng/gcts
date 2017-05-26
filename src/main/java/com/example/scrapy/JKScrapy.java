@@ -365,6 +365,9 @@ public class JKScrapy {
         InputStream is = new ByteArrayInputStream(data);
         BufferedImage grayImage = ImageHelper.convertImageToBinary(ImageIO.read(is));
         ITesseract instance = new Tesseract();  // JNA Interface Mapping
+        File directory = new File("");
+        instance.setDatapath(getClass().getResource(".").getFile().toString());
+
         instance.setLanguage("eng");
         String code ="";
         try {
