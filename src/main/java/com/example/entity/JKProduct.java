@@ -19,7 +19,7 @@ public class JKProduct {
     private String applyNumber;//批准文号
     private String applyDate;//批准日期
     private String applyEffective;//批准有效期
-    private String mark;//备注
+    private String markInfo;//备注
     private String productMark;//产品名称备注
     private String zhu; //注
     private String productionProcess;//生产工艺
@@ -30,6 +30,7 @@ public class JKProduct {
     private String shiyongfangfa;//使用方法
     private String chucuntiaojian;//储存条件
     private String baozhiqi;//保质期
+    private String infoMationsDetail;//成分详情
     private List<String> infoMations;//成分
 
     public String getChName() {
@@ -136,12 +137,12 @@ public class JKProduct {
         this.applyEffective = applyEffective;
     }
 
-    public String getMark() {
-        return mark;
+    public String getMarkInfo() {
+        return markInfo;
     }
 
-    public void setMark(String mark) {
-        this.mark = mark;
+    public void setMarkInfo(String markInfo) {
+        this.markInfo = markInfo;
     }
 
     public String getProductMark() {
@@ -230,5 +231,13 @@ public class JKProduct {
 
     public void setInfoMations(List<String> infoMations) {
         this.infoMations = infoMations;
+    }
+
+    public String getInfoMationsDetail() {
+        return infoMationsDetail;
+    }
+
+    public void setInfoMationsDetail(String infoMationsDetail) {
+        this.infoMationsDetail = infoMationsDetail;
     }
 }
