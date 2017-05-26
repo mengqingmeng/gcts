@@ -1,6 +1,5 @@
 package com.example.scrapy;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -18,7 +17,6 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +128,7 @@ public class JKScrapy {
         String techDetailUrl =contentTrs.get(16).getElementsByTag("td").get(1)
                 .getElementsByTag("a").get(0).attr("href");//产品技术要求，详细内容地址
 
-        logger.info("chname:"+chName);
+        logger.info("爬取产品:"+chName);
         //产品技术要求页面内容
         String detailResult = getDetail(techDetailUrl);
 
@@ -145,11 +143,13 @@ public class JKScrapy {
         String cctj = "";//储存条件
         String bzq = "";//保质期
 
-        if (!detailResult.isEmpty()){
+        if ((!detailResult.isEmpty())
+                && (detailResult.indexOf("该产品无此信息")==-1)){
             Document detailaDoc = Jsoup.parse(detailResult);
 
             //1.解析成分
-            Element cfTitle = detailaDoc.getElementsContainingOwnText("原料中文名称").get(0);
+            Elements cfTiles =detailaDoc.getElementsContainingOwnText("原料中文名称");
+            Element cfTitle = cfTiles.get(0);
             Element cfTotal = cfTitle.parent().parent();
             Elements cfTrs = cfTotal.getElementsByTag("tr");
             String sessionMuDi="";//缓存的成分使用目的
@@ -365,9 +365,6 @@ public class JKScrapy {
         InputStream is = new ByteArrayInputStream(data);
         BufferedImage grayImage = ImageHelper.convertImageToBinary(ImageIO.read(is));
         ITesseract instance = new Tesseract();  // JNA Interface Mapping
-        File directory = new File("");
-        instance.setDatapath(getClass().getResource(".").getFile().toString());
-
         instance.setLanguage("eng");
         String code ="";
         try {
