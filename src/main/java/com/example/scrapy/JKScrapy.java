@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.example.entity.JKProduct;
 import com.example.result.Result;
+import com.example.util.AmazonSpiderUtil;
 import com.example.util.DateUtil;
 import com.example.util.ReadAndWritePoiUtil;
 import com.example.util.UnirestUtil;
@@ -20,6 +21,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -36,6 +38,8 @@ import java.util.Map;
  */
 @Component
 public class JKScrapy {
+    @Autowired
+    AmazonSpiderUtil amazonSpiderUtil;
     private final static Logger logger = LoggerFactory.getLogger(JKScrapy.class);
 
     public void jk(Integer pageIndex) throws Exception {
@@ -67,23 +71,25 @@ public class JKScrapy {
         if(osIsWindows){
             fileName = "C:/HBSData/"+fileName;
         }
-        Document doc = Jsoup.connect(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex).post();
+        Document doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
 //            String data = (String) result.getData();
 //            Document doc = Jsoup.parse(data);
-            Elements as = doc.getElementsByTag("a");
-            List<JKProduct> products = new ArrayList<JKProduct>();//产品信息封装
-            for (Element element:as) {
-                String hrefValue = element.attr("href");
-                String[] hrefs = hrefValue.split("'");
-                String[] urlAndParams = hrefs[1].split("\\?");
-                JKProduct product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
-                products.add(product);
-            }
+        Elements as = doc.getElementsByTag("a");
+        List<JKProduct> products = new ArrayList<JKProduct>();//产品信息封装
+        for (Element element:as) {
+            String hrefValue = element.attr("href");
+            String[] hrefs = hrefValue.split("'");
+            String[] urlAndParams = hrefs[1].split("\\?");
 
-            //将数据写入excel中，每页写一次
-            ReadAndWritePoiUtil pu = ReadAndWritePoiUtil.getInstance(fileName);
-            pu.writeProuctInfo(products);
-            logger.info("*****成功爬取进口库第"+pageIndex+"页");
+            JKProduct product = null ;
+            product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
+            products.add(product);
+        }
+
+        //将数据写入excel中，每页写一次
+        ReadAndWritePoiUtil pu = ReadAndWritePoiUtil.getInstance(fileName);
+        pu.writeProuctInfo(products);
+        logger.info("*****成功爬取进口库第"+pageIndex+"页");
     }
 
     /**
@@ -94,15 +100,12 @@ public class JKScrapy {
      * @throws UnirestException
      * @throws IOException
      */
-    public JKProduct getProduct(String url,String params) throws UnirestException, IOException {
+    public JKProduct getProduct(String url,String params) throws Exception{
         JKProduct jkProduct = new JKProduct();
         //产品信息页面
-        Map<String,String> cookies = null;
-        Connection conn = Jsoup.connect(url+"?"+params).timeout(10000);
-        Document contentDoc = conn.post();
-        Connection.Response response = conn.response();
-        cookies = response.cookies();
-        String body = response.body();
+
+        Document contentDoc = Jsoup.connect(url+"?"+params).timeout(5000).post();
+        Map<String,String> cookies = getCookies();
 
         Elements contentTrs=contentDoc.getElementsByTag("tr");
         if (contentTrs.size()<1){
@@ -149,6 +152,9 @@ public class JKScrapy {
 
             //1.解析成分
             Elements cfTiles =detailaDoc.getElementsContainingOwnText("原料中文名称");
+            if (cfTiles.size()>0){
+
+
             Element cfTitle = cfTiles.get(0);
             Element cfTotal = cfTitle.parent().parent();
             Elements cfTrs = cfTotal.getElementsByTag("tr");
@@ -266,7 +272,7 @@ public class JKScrapy {
             //9.解析保质期
             Element bzqTitle = detailaDoc.getElementsContainingOwnText("【保质期】").get(0).parent();
             bzq =bzqTitle.nextElementSibling().getElementsByTag("td").get(0).text();
-
+            }
         }
 
         jkProduct.setChName(chName);
@@ -304,35 +310,21 @@ public class JKScrapy {
      * @return
      */
     public String getDetail(String url) throws UnirestException, IOException {
-        Map<String, String> cookies = new HashMap<String,String>();
-        Connection conn = null;
-        Connection.Response response = null;
-
-        conn = Jsoup.connect("http://123.127.80.6/sfda/ShowJSYQAction.do");
-        response = conn.execute();
-        cookies =response.cookies();
+        Map<String, String> cookies = getCookies();
 
         String code = getVeriCode(cookies);
 
-       conn =  Jsoup.connect(url+"&randomInt="+code+"&process=showNew").timeout(10000).cookies(cookies);
+       Document document =  Jsoup.connect(url+"&randomInt="+code+"&process=showNew").timeout(10000).cookies(cookies).post();
         //conn =  Jsoup.connect("http://123.127.80.6/sfda/ShowJSYQAction.do?"+"PID=4a7f362c3aff91c0d83b05d526e71e9e&randomInt="+code+"&process=showNew").timeout(10000).cookies(cookies);
-        response = conn.execute();
-        String detailStr=response.body();
-        //logger.info("xxxx:"+detailStr);
+        String detailStr = document.toString();
         if (detailStr==null ||detailStr.isEmpty()||detailStr .indexOf("alert('验证码错误，请重新输入！');")!=-1){
             int count = 10;
             while (count>0){
-
-                conn = Jsoup.connect("http://123.127.80.6/sfda/ShowJSYQAction.do");
-                response = conn.execute();
-
-                cookies =response.cookies();
+                cookies = getCookies();
                 code = getVeriCode(cookies);
 
-                conn = Jsoup.connect(url+"&randomInt="+code+"&process=showNew").timeout(10000).cookies(cookies);
-                conn.post();
-                response = conn.execute();
-                detailStr=response.body();
+                document = Jsoup.connect(url+"&randomInt="+code+"&process=showNew").timeout(10000).cookies(cookies).post();
+                detailStr = document.toString();
                 if (detailStr!=null && detailStr.indexOf("alert('验证码错误，请重新输入！');")==-1){
                     return detailStr;
                 }else if (detailStr.indexOf("该产品无此信息")!=-1){
@@ -345,7 +337,6 @@ public class JKScrapy {
         }else if(detailStr.indexOf("该产品无此信息")!=-1){
             detailStr ="";
         }
-
         return detailStr;
     }
 
@@ -377,7 +368,7 @@ public class JKScrapy {
 
     public Map<String,String> getCookies() throws IOException {
         Connection conn = Jsoup.connect("http://123.127.80.6/sfda/ShowJSYQAction.do");
-        Connection.Response response = conn.execute();
+        Connection.Response response = conn.method(Connection.Method.POST).execute();
         return response.cookies();
     }
 

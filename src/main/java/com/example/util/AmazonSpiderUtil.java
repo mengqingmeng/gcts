@@ -41,6 +41,13 @@ public final class AmazonSpiderUtil {
                 .get();
 
     }
+
+    public Document postDocument (String url ) throws Exception{
+        return Jsoup.connect(url).timeout(60000)
+                .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31").post();
+
+
+    }
     public String getURLSource(String  str) throws Exception    {
         URL url = new URL(str);
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
