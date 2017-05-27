@@ -351,7 +351,8 @@ public class JKScrapy {
             cookies=getCookies();
         String urlPath = "http://123.127.80.6/servlet/GetImageServlet?sn=randomImage";
         Connection conn = Jsoup.connect(urlPath).timeout(10000).cookies(cookies);
-        Connection.Response response = conn.execute();
+        conn.get();
+        Connection.Response response = conn.response();
         byte[] data = response.bodyAsBytes();
         InputStream is = new ByteArrayInputStream(data);
         BufferedImage grayImage = ImageHelper.convertImageToBinary(ImageIO.read(is));
