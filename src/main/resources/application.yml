@@ -5,6 +5,11 @@ spring:
     encoding:
       force: true
       charset: utf-8
+  output:
+    ansi:
+      enabled: detect
 server:
   tomcat:
     uri-encoding: UTF-8
+logging:
+  level: debug
