@@ -153,29 +153,29 @@ public class JKScrapy {
             //1.解析成分
             Elements cfTiles =detailaDoc.getElementsContainingOwnText("原料中文名称");
             if (cfTiles.size()>0){
+                for (Element cfTitle: cfTiles) {
+                    Element cfTotal = cfTitle.parent().parent();
+                    Elements cfTrs = cfTotal.getElementsByTag("tr");
+                    String sessionMuDi="";//缓存的成分使用目的
+                    for (int i=1;i<cfTrs.size();i++) {
+                        JSONObject cf = new JSONObject();
+                        Elements tds = cfTrs.get(i).children();
 
+                        if (tds.size()==3){
+                            cf.put("原料中文名称",tds.get(1).text());
+                            sessionMuDi = tds.get(2).text();
+                            cf.put("使用目的",tds.get(2).text());
+                            chengfen.add(tds.get(1).text());
+                        }else if(tds.size()==1){
+                            cf.put("原料中文名称",tds.get(0).text());
+                            cf.put("使用目的",sessionMuDi);
+                            chengfen.add(tds.get(0).text());
+                        }
 
-            Element cfTitle = cfTiles.get(0);
-            Element cfTotal = cfTitle.parent().parent();
-            Elements cfTrs = cfTotal.getElementsByTag("tr");
-            String sessionMuDi="";//缓存的成分使用目的
-            for (int i=1;i<cfTrs.size();i++) {
-                JSONObject cf = new JSONObject();
-                Elements tds = cfTrs.get(i).children();
+                        pfcf.add(cf);
+                    }
 
-                if (tds.size()==3){
-                    cf.put("原料中文名称",tds.get(1).text());
-                    sessionMuDi = tds.get(2).text();
-                    cf.put("使用目的",tds.get(2).text());
-                    chengfen.add(tds.get(1).text());
-                }else if(tds.size()==1){
-                    cf.put("原料中文名称",tds.get(0).text());
-                    cf.put("使用目的",sessionMuDi);
-                    chengfen.add(tds.get(0).text());
                 }
-
-                pfcf.add(cf);
-            }
 
             //2.解析生产工艺
             Element scgyTitle = detailaDoc.getElementsContainingOwnText("生产工艺").get(0);
