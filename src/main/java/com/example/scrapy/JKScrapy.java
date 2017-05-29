@@ -42,7 +42,7 @@ public class JKScrapy {
     AmazonSpiderUtil amazonSpiderUtil;
     private final static Logger logger = LoggerFactory.getLogger(JKScrapy.class);
 
-    public void jk(Integer pageIndex) throws Exception {
+    public void jk(Integer pageIndex){
         String baseUrl = "http://app1.sfda.gov.cn/datasearch/face3/";
         String searchUrl = baseUrl+"search.jsp";
         //产品名称列表
@@ -71,7 +71,20 @@ public class JKScrapy {
         if(osIsWindows){
             fileName = "C:/HBSData/"+fileName;
         }
-        Document doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
+        Document doc = null;
+        try {
+            doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("请求失败，第"+pageIndex+"页");
+            try{
+                doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                logger.info("第"+pageIndex+"页，再次请求失败，放弃请求");
+            }
+
+        }
 //            String data = (String) result.getData();
 //            Document doc = Jsoup.parse(data);
         Elements as = doc.getElementsByTag("a");
@@ -82,12 +95,29 @@ public class JKScrapy {
             String[] urlAndParams = hrefs[1].split("\\?");
 
             JKProduct product = null ;
-            product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
+            try {
+                product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info("获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
+                try{
+                    product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
+                }catch (Exception e1){
+                    e.printStackTrace();
+                    logger.info("再次，获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
+                }
+            }
             products.add(product);
         }
 
         //将数据写入excel中，每页写一次
-        ReadAndWritePoiUtil pu = ReadAndWritePoiUtil.getInstance(fileName);
+        ReadAndWritePoiUtil pu = null;
+        try {
+            pu = ReadAndWritePoiUtil.getInstance(fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("读取excel文件失败");
+        }
         pu.writeProuctInfo(products);
         logger.info("*****成功爬取进口库第"+pageIndex+"页");
     }
@@ -104,7 +134,7 @@ public class JKScrapy {
         JKProduct jkProduct = new JKProduct();
         //产品信息页面
 
-        Document contentDoc = Jsoup.connect(url+"?"+params).timeout(5000).post();
+        Document contentDoc = Jsoup.connect(url+"?"+params).timeout(10000).post();
         Map<String,String> cookies = getCookies();
 
         Elements contentTrs=contentDoc.getElementsByTag("tr");
@@ -311,7 +341,9 @@ public class JKScrapy {
      */
     public String getDetail(String url) throws UnirestException, IOException {
         Map<String, String> cookies = getCookies();
-
+        if (cookies==null || cookies.isEmpty()){
+            cookies = getCookies();
+        }
         String code = getVeriCode(cookies);
 
        Document document =  Jsoup.connect(url+"&randomInt="+code+"&process=showNew").timeout(10000).cookies(cookies).post();
@@ -347,12 +379,10 @@ public class JKScrapy {
      * @throws IOException
      */
     public String getVeriCode(Map<String,String> cookies) throws UnirestException, IOException {
-        if (cookies==null)
+        if (cookies==null || cookies.isEmpty())
             cookies=getCookies();
         String urlPath = "http://123.127.80.6/servlet/GetImageServlet?sn=randomImage";
-        Connection conn = Jsoup.connect(urlPath).timeout(10000).cookies(cookies);
-        conn.get();
-        Connection.Response response = conn.response();
+		Connection.Response response = Jsoup.connect(urlPath).timeout(10000).cookies(cookies).execute();
         byte[] data = response.bodyAsBytes();
         InputStream is = new ByteArrayInputStream(data);
         BufferedImage grayImage = ImageHelper.convertImageToBinary(ImageIO.read(is));

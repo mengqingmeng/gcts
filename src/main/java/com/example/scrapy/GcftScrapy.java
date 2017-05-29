@@ -38,9 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import sun.nio.ch.Net;
 
 /**
  * Created by mqm on 2017/5/11.
