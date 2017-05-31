@@ -43,8 +43,8 @@
 <script>
     $(function () {
         $('#start').click(function () {
-            var fromPage = $('#begin').val();
-            var endPage = $('#end').val();
+            var fromPage = Number($('#begin').val());
+            var endPage = Number($('#end').val());
             var select = $("input[name='ku']:checked");
 
             if(fromPage == 0 || endPage == 0 || select == undefined || select.length==0){
@@ -56,6 +56,9 @@
                 alert("起止页有误");
                 return;
             }
+//            console.log("formPage:"+fromPage+";type:"+typeof(fromPage))
+//            console.log("endPage:"+endPage+";type:"+typeof(endPage))
+//            return;
 
             $.ajax({url:"/startGcft",
                 data:{fromPage:fromPage,endPage:endPage,ku:select.val()},

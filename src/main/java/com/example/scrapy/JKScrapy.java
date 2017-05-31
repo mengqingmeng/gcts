@@ -87,6 +87,8 @@ public class JKScrapy {
         }
 //            String data = (String) result.getData();
 //            Document doc = Jsoup.parse(data);
+        if (doc==null)
+            return;
         Elements as = doc.getElementsByTag("a");
         List<JKProduct> products = new ArrayList<JKProduct>();//产品信息封装
         for (Element element:as) {
@@ -110,16 +112,21 @@ public class JKScrapy {
             products.add(product);
         }
 
-        //将数据写入excel中，每页写一次
-        ReadAndWritePoiUtil pu = null;
-        try {
-            pu = ReadAndWritePoiUtil.getInstance(fileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("读取excel文件失败");
+        if (!products.isEmpty()){
+            //将数据写入excel中，每页写一次
+            ReadAndWritePoiUtil pu = null;
+            try {
+                pu = ReadAndWritePoiUtil.getInstance(fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info("读取excel文件失败");
+            }
+            pu.writeProuctInfo(products);
+            logger.info("*****成功爬取进口库第"+pageIndex+"页");
+        }else{
+            logger.info("*****爬取进口库第"+pageIndex+"页,失败（此页没爬取到产品）");
         }
-        pu.writeProuctInfo(products);
-        logger.info("*****成功爬取进口库第"+pageIndex+"页");
+
     }
 
     /**
