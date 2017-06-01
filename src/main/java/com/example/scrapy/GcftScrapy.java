@@ -59,14 +59,35 @@ public class GcftScrapy {
 
             }
             logger.info("******国产非特殊用途爬取完成**********");
-        }else if(ku.equals("jk")){
-            for(int i=fromPage;i<=toPage;i++){
-                logger.info("进口化妆品库，正在爬取，第"+ i+"页");
-                jkScrapy.jk(i);
+        }else if(ku.equals("jk")) {
+            String fileName = "JK" + DateUtil.simpleDate() + ".xlsx";
+            String os = System.getProperty("os.name");
+            boolean osIsMacOsX = false;
+            boolean osIsWindows = false;
+            if (os != null) {
+                os = os.toLowerCase();
+                osIsMacOsX = "mac os x".equals(os);
+                osIsWindows = os != null && os.indexOf("windows") != -1;
+            } else {
+                osIsWindows = true;
+            }
 
+            if (osIsMacOsX) {
+                fileName = "/Users/mqm/HBSData/" + fileName;
+            }
+
+            if (osIsWindows) {
+                fileName = "C:/HBSData/" + fileName;
+            }
+            ReadAndWritePoiUtil pu = ReadAndWritePoiUtil.getInstance(fileName);
+
+            for (int i = fromPage; i <= toPage; i++) {
+                logger.info("进口化妆品库，正在爬取，第" + i + "页");
+                jkScrapy.jk(i, pu);
             }
             logger.info("******进口化妆品库爬取完成**********");
         }
+
     }
 
     /**

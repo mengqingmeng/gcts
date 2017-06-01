@@ -42,7 +42,7 @@ public class JKScrapy {
     AmazonSpiderUtil amazonSpiderUtil;
     private final static Logger logger = LoggerFactory.getLogger(JKScrapy.class);
 
-    public void jk(Integer pageIndex){
+    public void jk(Integer pageIndex,ReadAndWritePoiUtil pu){
         String baseUrl = "http://app1.sfda.gov.cn/datasearch/face3/";
         String searchUrl = baseUrl+"search.jsp";
         //产品名称列表
@@ -52,38 +52,30 @@ public class JKScrapy {
 //        }catch (Exception e){
 //            logger.info("JKScrapy ajaxPostStr exception");
 //        }
-            String fileName = "JK"+ DateUtil.simpleDate()+".xlsx";
-        String os = System.getProperty("os.name");
-        boolean osIsMacOsX = false;
-        boolean osIsWindows = false;
-        if (os != null) {
-        os = os.toLowerCase();
-            osIsMacOsX = "mac os x".equals(os);
-            osIsWindows = os != null && os.indexOf("windows") != -1;
-        }else{
-            osIsWindows = true;
-        }
 
-        if (osIsMacOsX){
-            fileName = "/Users/mqm/HBSData/"+fileName;
-        }
-
-        if(osIsWindows){
-            fileName = "C:/HBSData/"+fileName;
-        }
         Document doc = null;
         try {
             doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
         } catch (Exception e) {
+            boolean failure = false;
             e.printStackTrace();
             logger.info("请求失败，第"+pageIndex+"页");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+
             try{
                 doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
             } catch (Exception e1) {
                 e1.printStackTrace();
                 logger.info("第"+pageIndex+"页，再次请求失败，放弃请求");
+                failure=true;
             }
 
+            if (failure)
+                return;
         }
 //            String data = (String) result.getData();
 //            Document doc = Jsoup.parse(data);
@@ -102,6 +94,11 @@ public class JKScrapy {
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.info("获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
                 try{
                     product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
                 }catch (Exception e1){
@@ -114,15 +111,14 @@ public class JKScrapy {
 
         if (!products.isEmpty()){
             //将数据写入excel中，每页写一次
-            ReadAndWritePoiUtil pu = null;
             try {
-                pu = ReadAndWritePoiUtil.getInstance(fileName);
+                pu.writeProuctInfo(products);
+                logger.info("*****成功爬取进口库第"+pageIndex+"页");
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.info("读取excel文件失败");
             }
-            pu.writeProuctInfo(products);
-            logger.info("*****成功爬取进口库第"+pageIndex+"页");
+
         }else{
             logger.info("*****爬取进口库第"+pageIndex+"页,失败（此页没爬取到产品）");
         }
