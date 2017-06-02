@@ -57,7 +57,7 @@ public class JKScrapy {
         try {
             doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
         } catch (Exception e) {
-            boolean failure = false;
+            boolean failure = true;
             e.printStackTrace();
             logger.info("请求失败，第"+pageIndex+"页");
             try {
@@ -68,10 +68,11 @@ public class JKScrapy {
 
             try{
                 doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
+                failure=false;
             } catch (Exception e1) {
                 e1.printStackTrace();
                 logger.info("第"+pageIndex+"页，再次请求失败，放弃请求");
-                failure=true;
+
             }
 
             if (failure)
