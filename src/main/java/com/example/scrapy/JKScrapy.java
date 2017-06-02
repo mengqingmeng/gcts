@@ -104,10 +104,12 @@ public class JKScrapy {
                     product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
                 }catch (Exception e1){
                     e.printStackTrace();
+                    product = null;
                     logger.info("再次，获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
                 }
             }
-            products.add(product);
+            if (product!=null)
+                products.add(product);
         }
 
         if (!products.isEmpty()){
