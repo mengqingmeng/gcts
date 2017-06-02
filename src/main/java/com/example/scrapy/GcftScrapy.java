@@ -60,7 +60,7 @@ public class GcftScrapy {
             }
             logger.info("******国产非特殊用途爬取完成**********");
         }else if(ku.equals("jk")) {
-            String fileName = "JK" + DateUtil.simpleDate() + ".xlsx";
+            String fileName = "JK" + DateUtil.simpleDate() + "_"+fromPage+"-"+toPage+".xlsx";
             String os = System.getProperty("os.name");
             boolean osIsMacOsX = false;
             boolean osIsWindows = false;

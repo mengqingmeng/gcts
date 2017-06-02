@@ -58,7 +58,7 @@ public class JKScrapy {
             doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
         } catch (Exception e) {
             boolean failure = true;
-            e.printStackTrace();
+            //e.printStackTrace();
             logger.info("请求失败，第"+pageIndex+"页");
             try {
                 Thread.sleep(5000);
@@ -70,7 +70,7 @@ public class JKScrapy {
                 doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
                 failure=false;
             } catch (Exception e1) {
-                e1.printStackTrace();
+                //e1.printStackTrace();
                 logger.info("第"+pageIndex+"页，再次请求失败，放弃请求");
 
             }
@@ -82,6 +82,7 @@ public class JKScrapy {
 //            Document doc = Jsoup.parse(data);
         if (doc==null)
             return;
+
         Elements as = doc.getElementsByTag("a");
         List<JKProduct> products = new ArrayList<JKProduct>();//产品信息封装
         for (Element element:as) {
@@ -93,7 +94,7 @@ public class JKScrapy {
             try {
                 product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 logger.info("获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
                 try {
                     Thread.sleep(5000);
@@ -103,7 +104,7 @@ public class JKScrapy {
                 try{
                     product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
                 }catch (Exception e1){
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     product = null;
                     logger.info("再次，获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
                 }
@@ -118,7 +119,7 @@ public class JKScrapy {
                 pu.writeProuctInfo(products);
                 logger.info("*****成功爬取进口库第"+pageIndex+"页");
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 logger.info("读取excel文件失败");
             }
 
