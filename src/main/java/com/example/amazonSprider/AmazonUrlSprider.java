@@ -3,6 +3,7 @@ package com.example.amazonSprider;
 import com.example.entity.AmazonProduct;
 import com.example.entity.AmazonProductUrl;
 import com.example.util.AmazonSpiderUtil;
+import com.example.util.DateUtil;
 import com.example.util.ReadAndWritePoiUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,24 +25,73 @@ public class AmazonUrlSprider {
     private static final String  amazon = "https://www.amazon.com";
 
 
-    private Map<String,String> getUrls(String url) throws Exception{
-
-        Map<String ,String> urls = new HashMap<String, String>();
+    public Map<String,Map<String,String>> getAllUrls(String url) throws Exception{
+        Map<String,Map<String,String>> allUrls = new HashMap<>();
+        Map<String ,String> urls = null;
         Document doc = su.getDocument(url);
         Elements es = doc.getElementsByClass("browseBox");
         Iterator<Element> i = es.iterator();
         Element e = null;
+        Element next = null;
+        Elements li = null;
+        String title = null;
+        if(i.hasNext()){
+            e = i.next();
+            es = e.getElementsByTag("h3");
+            i = es.iterator();
+            while(i.hasNext()){
+                urls = new HashMap<>();
+                e = i.next();
+                title = e.text();
+                next = e.nextElementSibling();
+                li = next.getElementsByTag("a");
+                Iterator<Element> j = li.iterator();
+                while (j.hasNext()){
+                    next = j.next();
+                    urls.put(next.text(),amazon +next.attr("href"));
+                }
+                allUrls.put(title,urls);
+            }
+        }
+        return allUrls;
+    }
+
+    public Map<String,String> getUrls(String url) throws Exception{
+        Map<String ,String> urls = new HashMap<>();
+        Document doc = su.getDocument(url);
+        Elements es = doc.getElementsByClass("categoryRefinementsSection");
+        Iterator<Element> i = es.iterator();
+        Element e = null;
+        Element next = null;
+        Elements li = null;
+        String url1 = null;
+        String title = null;
         if(i.hasNext()){
             e = i.next();
             es = e.getElementsByTag("a");
             i = es.iterator();
+
             while(i.hasNext()){
+                title = "";
                 e = i.next();
-                urls.put(e.html(),amazon +e.attr("href"));
+                url1 = amazon +e.attr("href");
+                li = e.getElementsByTag("span");
+                Iterator<Element> j = li.iterator();
+                while (j.hasNext()){
+                    next = j.next();
+                   title += next.text();
+                }
+                urls.put(title,url1);
             }
         }
         return urls;
     }
+
+
+
+
+
+
 
     private int getPageCount(Document doc){
         Iterator<Element> i = doc.getElementById("search-results").getElementsByClass("pagnDisabled").iterator();
@@ -156,16 +206,34 @@ public class AmazonUrlSprider {
 */
 
 
-    public void startAmazonUrlSprider(String url,String clazz){
+    public void startAmazonUrlSprider(String url){
         Document doc = null;
         Document temp = null;
         AmazonProductSprider ps = null;
         int pageCount;
         List<AmazonProductUrl> urls = new ArrayList<>();
         ReadAndWritePoiUtil rw = null;
-        String path = "d:/data/amazon/amazon.xlsx";
+        String fileName = "JK" + DateUtil.simpleDate() + ".xlsx";
+        String os = System.getProperty("os.name");
+        boolean osIsMacOsX = false;
+        boolean osIsWindows = false;
+        if (os != null) {
+            os = os.toLowerCase();
+            osIsMacOsX = "mac os x".equals(os);
+            osIsWindows = os != null && os.indexOf("windows") != -1;
+        } else {
+            osIsWindows = true;
+        }
+
+        if (osIsMacOsX) {
+            fileName = "/Users/mqm/HBSData/" + fileName;
+        }
+
+        if (osIsWindows) {
+            fileName = "C:/HBSData/" + fileName;
+        }
         try {
-            rw = ReadAndWritePoiUtil.getInstance(path);
+            rw = ReadAndWritePoiUtil.getInstance(fileName);
         } catch (FileNotFoundException e) {
             System.out.println("创建excel 失败");
             e.printStackTrace();
@@ -173,7 +241,7 @@ public class AmazonUrlSprider {
         List<AmazonProduct> products = new ArrayList<>();
         try {
             ps = new AmazonProductSprider();
-            doc = su.getDocument(getUrls(url).get(clazz));
+            doc = su.getDocument(url);
             pageCount =getPageCount(doc);
             urls.addAll(saveProductUrl(doc));
          //   ReadAndWritePoiUtil pu = new ReadAndWritePoiUtil("d:/Data/Amazon/Url.xls");
@@ -198,7 +266,10 @@ public class AmazonUrlSprider {
                 }
                 System.out.println(m);
             }
-
+                if(products.size()>0){
+                    rw.writeProuctInfo(products);
+                    products.clear();
+            }
         } catch (Exception e1) {
 
             e1.printStackTrace();

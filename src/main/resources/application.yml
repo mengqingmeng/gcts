@@ -11,5 +11,6 @@ spring:
 server:
   tomcat:
     uri-encoding: UTF-8
+  port: 8090
 logging:
   level: debug

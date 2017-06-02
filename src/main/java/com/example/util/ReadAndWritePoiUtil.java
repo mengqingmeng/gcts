@@ -44,7 +44,7 @@ public final class ReadAndWritePoiUtil {
     }
 
     public static ReadAndWritePoiUtil getInstance(String  filePath) throws FileNotFoundException {
-        filePath = filePath == null ? "d:/data/temp.xls":filePath;
+        filePath = filePath == null ? "c:/data/temp.xlsx":filePath;
         if(instance == null){
             instance = new ReadAndWritePoiUtil(filePath);
         }else if(!filePath.equals(instance.getFilePath())){

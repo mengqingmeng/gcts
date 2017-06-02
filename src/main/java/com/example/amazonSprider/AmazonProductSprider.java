@@ -119,8 +119,13 @@ public class AmazonProductSprider {
                 return e.text();
             }else {
                 e = doc.getElementById("size_name_0_price");
-                e = e.getElementsByTag("span").first();
-                return e.text();
+                if(e!=null) {
+                    e = e.getElementsByTag("span").first();
+                    return e.text();
+                }else{
+                    return null;
+                }
+
             }
         }
 
@@ -178,7 +183,7 @@ public class AmazonProductSprider {
       //  List<AmazonProductInfoMation> infos =  null;
       //  AmazonProductInfoMation info = null;
         String string  = null ;
-        List<String> strings = null;
+        List<String> strings = new ArrayList<>();
         Element e = doc.getElementById("importantInformation");
         if(e != null){
           //  infos = new ArrayList<AmazonProductInfoMation>();
@@ -190,7 +195,7 @@ public class AmazonProductSprider {
                 for(String s1 : strarr1){
                  //  info = new AmazonProductInfoMation();
                  //   info .setName(s1);
-                  strings.add(string);
+                  strings.add(s1);
                   //  infos.add(info);
                 }
             }

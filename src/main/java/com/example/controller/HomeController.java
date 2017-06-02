@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.amazonSprider.AmazonUrlSprider;
 import com.example.beautyPediaSprider.PediaService;
 import com.example.entity.BeautyCategory;
 import com.example.entity.EWGProduct;
@@ -42,6 +43,8 @@ public class HomeController {
     private final static Logger logger = LoggerFactory.getLogger(HomeController.class);
     @Autowired
     GcftScrapy gcftScrapy;
+    @Autowired
+    AmazonUrlSprider aus;
 
     @RequestMapping("/gcft")
     public String home() {
@@ -156,5 +159,49 @@ public class HomeController {
 
     }
 
+    @RequestMapping("/amazon")
+    public  String amazon(ModelMap model){
+        try {
+            Map<String,String> urls = null;
+            List<Map<String,String>> urlss = new ArrayList<>();
+            Map<String,Map<String,String>> allUrls = aus.getAllUrls("https://www.amazon.com/Beauty-Makeup-Skin-Hair-Products/b/ref=topnav_storetab_beauty_sn_fo?ie=UTF8&node=3760911");
+            model.put("allUrls",allUrls);
+			/*Set<Map.Entry<String ,Map<String,String>>> entry = allUrls.entrySet();
+			for(Map.Entry e : entry){
+				Set<Map.Entry<String,String>> entry1 = ((Map<String,String>)e.getValue()).entrySet();
 
+				for(Map.Entry e1 : entry1){
+					urls =aus.getUrls((String)e1.getValue());
+					urlss.add(urls);
+					System.out.println(e1.getKey());
+					System.out.println(e1.getValue());
+
+				}
+			}
+			model.put("urls",urlss);*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Amazon";
+    }
+
+
+
+    @RequestMapping("/amazon/Wait")
+    public  String amazonWait(String url ,ModelMap model){
+        model.put("url",url);
+        return "AmazonWait";
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/amazon/Sp")
+    public  String amazonStart(String url){
+        String[] urls = url.split("%:%");
+        for(String s : urls) {
+            aus.startAmazonUrlSprider(s);
+        }
+        return "获取完成";
+    }
 }
+
