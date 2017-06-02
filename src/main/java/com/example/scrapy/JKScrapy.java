@@ -95,7 +95,7 @@ public class JKScrapy {
                 product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
             } catch (Exception e) {
                 //e.printStackTrace();
-                logger.info("获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
+                logger.info("获取第"+pageIndex+"页的产品失败一次，将重新请求。详情："+urlAndParams[0]+urlAndParams[1]);
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException ie) {
@@ -106,7 +106,7 @@ public class JKScrapy {
                 }catch (Exception e1){
                     //e.printStackTrace();
                     product = null;
-                    logger.info("再次，获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
+                    logger.info("再次，获取第"+pageIndex+"页的产品失败，将放弃请求本页数据。详情："+urlAndParams[0]+urlAndParams[1]);
                 }
             }
             if (product!=null)
