@@ -34,6 +34,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -124,4 +125,15 @@ public class GctsApplicationTests {
 		String body = response.body();
 		logger.info("body:"+body);
 	}
+
+	@Test
+	public void xx(){
+		for (int i =0;i<10;i++) {
+			Random random = new Random();
+			int index = random.nextInt(10);
+			logger.info(index+"");
+		}
+
+	}
+
 }
