@@ -59,9 +59,9 @@ public class JKScrapy {
         } catch (Exception e) {
             boolean failure = true;
             //e.printStackTrace();
-            logger.info("请求失败，第"+pageIndex+"页");
+            logger.info("第"+pageIndex+"页，请求失败，将在5min后再次请求。");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(300000);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
@@ -95,9 +95,9 @@ public class JKScrapy {
                 product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
             } catch (Exception e) {
                 //e.printStackTrace();
-                logger.info("获取第"+pageIndex+"页的产品失败一次，将重新请求。详情："+urlAndParams[0]+urlAndParams[1]);
+                logger.info("获取第"+pageIndex+"页的产品失败一次，将在5min后重新请求。详情："+urlAndParams[0]+urlAndParams[1]);
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(300000);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
