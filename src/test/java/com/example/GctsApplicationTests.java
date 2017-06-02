@@ -130,7 +130,7 @@ public class GctsApplicationTests {
 	public void xx(){
 		for (int i =0;i<10;i++) {
 			Random random = new Random();
-			int index = random.nextInt(10);
+			int index = random.nextInt(10)+1;
 			logger.info(index+"");
 		}
 
