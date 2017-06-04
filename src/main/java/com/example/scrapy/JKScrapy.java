@@ -2,13 +2,9 @@ package com.example.scrapy;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.example.entity.JKProduct;
-import com.example.result.Result;
 import com.example.util.AmazonSpiderUtil;
-import com.example.util.DateUtil;
 import com.example.util.ReadAndWritePoiUtil;
-import com.example.util.UnirestUtil;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
@@ -27,11 +23,11 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.util.UserAgents.getRandomAgent;
 
 /**
  * Created by mqm on 2017/5/23.
@@ -54,8 +50,9 @@ public class JKScrapy {
 //        }
 
         Document doc = null;
+        String pageUrl = searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex;
         try {
-            doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
+            doc = amazonSpiderUtil.postDocument(pageUrl);
         } catch (Exception e) {
             boolean failure = true;
             //e.printStackTrace();
@@ -67,7 +64,7 @@ public class JKScrapy {
             }
 
             try{
-                doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
+                doc = Jsoup.connect(pageUrl).timeout(60000).userAgent(getRandomAgent()).post();
                 failure=false;
             } catch (Exception e1) {
                 //e1.printStackTrace();
@@ -141,7 +138,7 @@ public class JKScrapy {
         JKProduct jkProduct = new JKProduct();
         //产品信息页面
 
-        Document contentDoc = Jsoup.connect(url+"?"+params).timeout(10000).post();
+        Document contentDoc = Jsoup.connect(url+"?"+params).timeout(10000).userAgent(getRandomAgent()).post();
         Map<String,String> cookies = getCookies();
 
         Elements contentTrs=contentDoc.getElementsByTag("tr");
