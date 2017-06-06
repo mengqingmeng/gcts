@@ -60,14 +60,16 @@ public class GcftScrapy {
             }
             logger.info("******国产非特殊用途爬取完成**********");
         }else if(ku.equals("jk")) {
-            String fileName = "JK" + DateUtil.simpleDate() + ".xlsx";
+            String fileName = "JK" + DateUtil.simpleDate() + "From"+fromPage+"To"+toPage+".xlsx";
             String os = System.getProperty("os.name");
             boolean osIsMacOsX = false;
             boolean osIsWindows = false;
+            boolean osIsLinux = false;
             if (os != null) {
                 os = os.toLowerCase();
                 osIsMacOsX = "mac os x".equals(os);
                 osIsWindows = os != null && os.indexOf("windows") != -1;
+                osIsLinux = os.indexOf("linux")>-1;
             } else {
                 osIsWindows = true;
             }
@@ -79,6 +81,11 @@ public class GcftScrapy {
             if (osIsWindows) {
                 fileName = "C:/HBSData/" + fileName;
             }
+
+            if (osIsLinux) {
+                fileName = "/root/Desktop/" + fileName;
+            }
+
             ReadAndWritePoiUtil pu = ReadAndWritePoiUtil.getInstance(fileName);
 
             for (int i = fromPage; i <= toPage; i++) {

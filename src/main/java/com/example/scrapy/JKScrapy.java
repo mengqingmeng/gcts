@@ -2,13 +2,9 @@ package com.example.scrapy;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.example.entity.JKProduct;
-import com.example.result.Result;
 import com.example.util.AmazonSpiderUtil;
-import com.example.util.DateUtil;
 import com.example.util.ReadAndWritePoiUtil;
-import com.example.util.UnirestUtil;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
@@ -27,11 +23,11 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.util.UserAgents.getRandomAgent;
 
 /**
  * Created by mqm on 2017/5/23.
@@ -54,23 +50,24 @@ public class JKScrapy {
 //        }
 
         Document doc = null;
+        String pageUrl = searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex;
         try {
-            doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
+            doc = amazonSpiderUtil.postDocument(pageUrl);
         } catch (Exception e) {
             boolean failure = true;
-            e.printStackTrace();
-            logger.info("请求失败，第"+pageIndex+"页");
+            //e.printStackTrace();
+            logger.info("第"+pageIndex+"页，请求失败，将在5min后再次请求。");
             try {
-                Thread.sleep(5000);
+                Thread.sleep(300000);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
 
             try{
-                doc = amazonSpiderUtil.postDocument(searchUrl+"?"+"tableId=69&State=1&tableName=TABLE69&curstart="+pageIndex);
+                doc = Jsoup.connect(pageUrl).timeout(60000).userAgent(getRandomAgent()).post();
                 failure=false;
             } catch (Exception e1) {
-                e1.printStackTrace();
+                //e1.printStackTrace();
                 logger.info("第"+pageIndex+"页，再次请求失败，放弃请求");
 
             }
@@ -82,6 +79,7 @@ public class JKScrapy {
 //            Document doc = Jsoup.parse(data);
         if (doc==null)
             return;
+
         Elements as = doc.getElementsByTag("a");
         List<JKProduct> products = new ArrayList<JKProduct>();//产品信息封装
         for (Element element:as) {
@@ -93,21 +91,23 @@ public class JKScrapy {
             try {
                 product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
             } catch (Exception e) {
-                e.printStackTrace();
-                logger.info("获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
+                //e.printStackTrace();
+                logger.info("获取第"+pageIndex+"页的产品失败一次，将在5min后重新请求。详情："+urlAndParams[0]+urlAndParams[1]);
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(300000);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
                 try{
                     product = getProduct(baseUrl+urlAndParams[0],urlAndParams[1]);
                 }catch (Exception e1){
-                    e.printStackTrace();
-                    logger.info("再次，获取第"+pageIndex+"页的产品失败，详情："+urlAndParams[0]+urlAndParams[1]);
+                    //e.printStackTrace();
+                    product = null;
+                    logger.info("再次，获取第"+pageIndex+"页的产品失败，将放弃请求本产品数据。详情："+urlAndParams[0]+urlAndParams[1]);
                 }
             }
-            products.add(product);
+            if (product!=null)
+                products.add(product);
         }
 
         if (!products.isEmpty()){
@@ -116,7 +116,7 @@ public class JKScrapy {
                 pu.writeProuctInfo(products);
                 logger.info("*****成功爬取进口库第"+pageIndex+"页");
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 logger.info("读取excel文件失败");
             }
 
@@ -138,7 +138,7 @@ public class JKScrapy {
         JKProduct jkProduct = new JKProduct();
         //产品信息页面
 
-        Document contentDoc = Jsoup.connect(url+"?"+params).timeout(10000).post();
+        Document contentDoc = Jsoup.connect(url+"?"+params).timeout(10000).userAgent(getRandomAgent()).post();
         Map<String,String> cookies = getCookies();
 
         Elements contentTrs=contentDoc.getElementsByTag("tr");
