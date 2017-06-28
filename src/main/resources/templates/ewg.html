@@ -8,10 +8,13 @@
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
     <script th:src="@{/vue/vue.min.js}"></script>
     <script th:src="@{/vue/vue-resource.min.js}"></script>
-    <title>ewg</title>
+    <title>ewg类目选择</title>
+    <style>
+        .url_item{cursor:pointer}
+    </style>
 </head>
 <body>
-
+        <h2 style="padding-left: 20px">选择以下要爬取的类目</h2>
     <!--/*@thymesVar id="jobs" type=""*/-->
         <ul th:each="job :${jobs}" id="ewg">
             <!--/*@thymesVar id="name" type=""*/-->
@@ -19,7 +22,7 @@
             <ul th:each="classify:${job.classifies}">
                 <li th:text="${classify.type}"></li>
                 <ul th:each="url:${classify.urls}">
-                    <a th:text="${url.name}" th:attr="productType=${url.name}" v-on:click="scrapy()"></a>
+                    <a th:text="${url.name}" th:attr="productUrl=${url.url}" v-on:click="scrapy()" class="url_item"></a>
                 </ul>
             </ul>
         </ul>
@@ -29,11 +32,11 @@
             el:"#ewg",
             methods: {
                 scrapy: function () {
-                    var type = event.target.getAttribute('productType')
+                    var url = event.target.getAttribute('productUrl')
 
-                    this.$http.post("/ewgProduct",{type:type},{emulateJSON:true}).then(
+                    this.$http.post("/ewgProduct",{url:url},{emulateJSON:true}).then(
                         function (res) {
-                            console.log(res.body)
+                            console.log(res.bodyText)
                         },function (res) {
                             // 处理失败的结果
                         }

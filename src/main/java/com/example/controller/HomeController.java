@@ -46,6 +46,11 @@ public class HomeController {
     @Autowired
     AmazonUrlSprider aus;
 
+    @RequestMapping("/")
+    public String index() {
+        return "index";
+    }
+
     @RequestMapping("/gcft")
     public String home() {
         return "gcft";
@@ -108,7 +113,8 @@ public class HomeController {
      */
     @RequestMapping("/ewg")
     public String ewg(ModelMap model) throws Exception {
-        String url = "https://www.ewg.org/skindeep/";
+        String domain ="https://www.ewg.org";
+        String url = domain+"/skindeep/";
         Document doc = Jsoup.connect(url).get();
         Elements newsHeadlines = doc.select(".menuhover");
         JSONArray jobs = new JSONArray();//要执行的爬虫任务列表
@@ -132,7 +138,7 @@ public class HomeController {
                         Elements as = ul.getElementsByTag("a");
                         for (Element a : as) {//添加链接和名称
                             JSONObject urlWithName = new JSONObject();
-                            urlWithName.put("url", a.attr("href"));
+                            urlWithName.put("url", domain+a.attr("href"));
                             urlWithName.put("name", a.text());
                             urlWithNames.add(urlWithName);
                         }
@@ -153,7 +159,7 @@ public class HomeController {
 
     @ResponseBody
     @RequestMapping("/ewgProduct")
-    public String ewgProduct(@RequestParam("url") String  url) throws IOException {
+    public String ewgProduct(@RequestParam("url") String  url){
 
         return "爬取成功";
 
@@ -182,7 +188,7 @@ public class HomeController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "Amazon";
+        return "amazon";
     }
 
 
